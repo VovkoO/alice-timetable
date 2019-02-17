@@ -10,5 +10,8 @@ def get_request(request):
     if request.method == 'POST':
         request_json = json.loads(request.body.decode('utf-8'))
         return HttpResponse(str(request_json))
-    return HttpResponse('Error')
+    return HttpResponse('No POST in request')
 
+
+def home_page(request):
+    return HttpResponse('Hello')
