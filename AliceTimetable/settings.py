@@ -25,7 +25,9 @@ SECRET_KEY = 'co+^b%^^kz1yqpl1#j1dedf^=3+5y0kch1hr1)n*o$*i)-02=6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['84.201.142.244',
+                 'http://alicetime.ru/',
+                 'alicetime.ru']
 
 
 # Application definition
