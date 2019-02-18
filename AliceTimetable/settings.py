@@ -27,7 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['84.201.142.244',
                  'http://alicetime.ru/',
-                 'alicetime.ru']
+                 'alicetime.ru',
+                 'www.alicetime.ru']
 
 
 # Application definition
