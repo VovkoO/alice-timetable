@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import json
 
 
@@ -9,7 +9,20 @@ import json
 def get_request(request):
     if request.method == 'POST':
         request_json = json.loads(request.body.decode('utf-8'))
-        return HttpResponse(str(request_json))
+        response = {
+                "response": {
+                    "text": "Привет, студент",
+                    "tts": "Привет, ст+удент!",
+                    "end_session": False
+                },
+                "session": {
+                    "session_id": request_json['session']['session_id'],
+                    "message_id": request_json['session']['message_id'],
+                    "user_id": request_json['session']['user_id']
+                },
+                "version": "1.0"
+        }
+        return JsonResponse(json.dumps(response), safe=False)
     return HttpResponse('No POST in request')
 
 
