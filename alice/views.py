@@ -22,7 +22,11 @@ def get_request(request):
                 },
                 "version": "1.0"
         }
+<<<<<<< HEAD
         return JsonResponse(response)
+=======
+        return JsonResponse(json.dumps(response), safe=False)
+>>>>>>> e29ea9a9205eb154995fbed320f195d7cdfbbcff
     return HttpResponse('No POST in request')
 
 
