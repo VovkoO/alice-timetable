@@ -23,4 +23,4 @@ class Lesson(models.Model):
 
 class Dates(models.Model):
     date = models.DateField(auto_now=False)
-    lesson_id = models.ForeignKey(Univercity, on_delete=models.CASCADE, null=True, blank=True)
+    lesson_id = models.ForeignKey(Lesson, on_delete=models.CASCADE, null=True, blank=True)

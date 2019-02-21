@@ -6,6 +6,8 @@ from .models import Univercity, Group, Lesson, Dates
 # class UnivercityAdmin(admin.ModelAdmin):
 #     list_display = ('name')
 
+admin.site.register(Univercity)
+
 
 class GroupAdmin(admin.ModelAdmin):
     list_display = ('name', 'univercity_id')
