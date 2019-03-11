@@ -1,0 +1,105 @@
+{% extends 'navbar.html' %}
+
+{% block content %}
+
+
+    <form name="lesson" method="post" action="{% url 'add_timetable' %}">{% csrf_token %}
+        <input class="form-control" type="text" name="univercity" placeholder="Укажите ВУЗ"><br>
+        <input class="form-control" type="text" name="group" placeholder="Укажите группу"><br>
+        <input class="form-control" type="text" name="lesson" placeholder="Укажите предмет"><br>
+        <input class="form-control" type="text" name="teacher" placeholder="Укажите преподавателя"><br>
+        <input class="form-control" type="text" name="classroom" placeholder="Укажите аудиторию"><br>
+        Начало:
+        <input class="form-control" name="start_time" type="time"><br>
+        Конец:
+        <input class="form-control" name="end_time" type="time"><br>
+
+        <div class="accordion" id="accordionExample">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Периодически
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <div class="card-body">
+                        Дата начала занятия
+                        <input class="form-control" name="start_date" type="date"><br>
+                        Дата окончания занятия
+                        <input class="form-control" name="end_date" type="date"><br>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="day_of_week" id="monday" value="0" checked>
+                            <label class="form-check-label" for="inlineRadio1">Пн</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="day_of_week" id="tuesday" value="1">
+                            <label class="form-check-label" for="inlineRadio2">Вт</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="day_of_week" id="wednesday" value="2">
+                            <label class="form-check-label" for="inlineRadio3">Ср</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="day_of_week" id="thursday" value="3">
+                            <label class="form-check-label" for="inlineRadio2">Чт</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="day_of_week" id="friday" value="4">
+                            <label class="form-check-label" for="inlineRadio2">Пт</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="day_of_week" id="saturday" value="5">
+                            <label class="form-check-label" for="inlineRadio2">Сб</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="day_of_week" id="sunday" value="6">
+                            <label class="form-check-label" for="inlineRadio2">Вс</label>
+                        </div>
+                        <br>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="repeat" id="each_week" value="each_week" checked>
+                            <label class="form-check-label" for="exampleRadios1">
+                                Каждую неделю
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="repeat" id="even_week" value="even_week">
+                            <label class="form-check-label" for="exampleRadios2">
+                                По четными
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="repeat" id="uneven_week" value="uneven_week">
+                            <label class="form-check-label" for="exampleRadios3">
+                                По нечетным
+                            </label>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Произвольные даты
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                    <div class="card-body">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div align="right">
+            <button type="submit" name="add_lesson" class="btn btn-dark">Добавить</button>
+        </div>
+    </form>
+{% endblock %}

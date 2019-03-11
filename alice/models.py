@@ -18,7 +18,7 @@ class Lesson(models.Model):
     classroom = models.CharField(max_length=10)
     start_time = models.TimeField(auto_now=False, null=True)
     end_time = models.TimeField(auto_now=False, null=True)
-    group_id = models.ForeignKey(Univercity, on_delete=models.CASCADE, null=True, blank=True)
+    group_id = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class Dates(models.Model):
