@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
+from django.contrib import auth
 import json
 from . import site_backend, alice_backend
 
@@ -10,13 +11,11 @@ def get_request(request):
     if request.method == 'POST':
         request_json = json.loads(request.body.decode('utf-8'))
         answer = alice_backend.get_answer(request_json)
-        if answer is not None:
-            answer = answer.date()
         answer = str(answer)
         response = {
             "response": {
-                "text": "Привет, студент, сейчас: " + answer,
-                "tts": "Привет, ст+удент!",
+                "text": answer,
+                "tts": answer,
                 "end_session": False
             },
             "session": {
@@ -53,4 +52,22 @@ def add_timetable(request):
             return render(request, 'add_timetable.html', {'if_add': 'Предмет добавлен'})
         else:
             return render(request, 'add_timetable.html', {'if_add': 'Даты не добавлены'})
-    return render(request, 'add_timetable.html', {})
+    return render(request, 'add_timetable.html', {'user': auth.get_user(request).get_username()})
+
+
+def login(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = auth.authenticate(username=email, password=password)
+        if user is not None:
+            auth.login(request, user)
+            return render(request, 'add_timetable.html', {'user': auth.get_user(request).get_username()})
+        else:
+            return render(request, 'login.html', {'error': 'Нерпавильный email или пароль', 'user': auth.get_user(request).get_username()})
+    return render(request, 'login.html', {'user': auth.get_user(request).get_username()})
+
+
+def logout(request):
+    auth.logout(request)
+    return render(request, 'add_timetable.html', {'user': auth.get_user(request).get_username()})

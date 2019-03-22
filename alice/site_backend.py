@@ -13,12 +13,16 @@ def add_to_db(univercity_name, group_name, lesson_name, teacher, classroom, star
     try:
         univercity = Univercity.objects.get(name=univercity_name)
     except Univercity.DoesNotExist:
-        univercity = Univercity.objects.create(name=univercity_name)
+        readable_name = univercity_name.replace(' ', '')
+        readable_name = readable_name.replace('-', '')
+        univercity = Univercity.objects.create(name=univercity_name, readable_name=readable_name)
 
     try:
         group = Group.objects.get(name=group_name, univercity_id=univercity)
     except Group.DoesNotExist:
-        group = Group.objects.create(name=group_name, univercity_id=univercity)
+        readable_name = group_name.replace(' ', '')
+        readable_name = readable_name.replace('-', '')
+        group = Group.objects.create(name=group_name, readable_name=readable_name, univercity_id=univercity)
 
     try:
         lesson = Lesson.objects.get(name=lesson_name, teacher=teacher, classroom=classroom, start_time=start_time,
