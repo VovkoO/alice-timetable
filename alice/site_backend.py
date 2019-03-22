@@ -15,6 +15,7 @@ def add_to_db(univercity_name, group_name, lesson_name, teacher, classroom, star
     except Univercity.DoesNotExist:
         readable_name = univercity_name.replace(' ', '')
         readable_name = readable_name.replace('-', '')
+        readable_name = readable_name.lower()
         univercity = Univercity.objects.create(name=univercity_name, readable_name=readable_name)
 
     try:
@@ -22,6 +23,7 @@ def add_to_db(univercity_name, group_name, lesson_name, teacher, classroom, star
     except Group.DoesNotExist:
         readable_name = group_name.replace(' ', '')
         readable_name = readable_name.replace('-', '')
+        readable_name = readable_name.lower()
         group = Group.objects.create(name=group_name, readable_name=readable_name, univercity_id=univercity)
 
     try:

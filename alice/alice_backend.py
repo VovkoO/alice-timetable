@@ -20,7 +20,7 @@ def get_answer(json_request):
             except Univercity.DoesNotExist:
                 return 'Для данного учебного заведения не нашлось расписания. Попробуйте произнести еще раз его название,' \
                        ' либо добавте свое расписание на сайте.'
-        AliceUsers.objects.create(user_id=user_id, univercity_id=univercity)
+        AliceUsers.objects.create(user_id=user_id, univerсity_id=univercity)
         return 'Вам осталось лишь указать группу, в которой вы учитесь. Произнесите ее кодировку.'
     user_group = alice_user.group_id
     if not user_group:

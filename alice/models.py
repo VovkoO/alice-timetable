@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -11,15 +12,18 @@ class Univercity(models.Model):
 class Group(models.Model):
     name = models.CharField(max_length=20)
     readable_name = models.CharField(max_length=20, default=name)
-    univercity_id = models.ForeignKey(Univercity, on_delete=models.CASCADE, null=True, blank=True)
+    univerсity_id = models.ForeignKey(Univercity, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class Lesson(models.Model):
     name = models.CharField(max_length=50)
-    teacher = models.CharField(max_length=20)
-    classroom = models.CharField(max_length=10)
+    teacher = models.CharField(max_length=20, blank=True)
+    classroom = models.CharField(max_length=10, blank=True)
     start_time = models.TimeField(auto_now=False, null=True)
     end_time = models.TimeField(auto_now=False, null=True)
+    day_of_week = models.IntegerField(default=0)
+    repeat = models.IntegerField(default=0)
+    type = models.CharField(max_length=10, blank=True)
     group_id = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
 
 
@@ -30,5 +34,11 @@ class Dates(models.Model):
 
 class AliceUsers(models.Model):
     user_id = models.CharField(max_length=65)
-    univercity_id = models.ForeignKey(Univercity, on_delete=models.CASCADE, null=True, blank=True)
+    univerсity_id = models.ForeignKey(Univercity, on_delete=models.CASCADE, null=True, blank=True)
+    group_id = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
+
+
+class SiteUsers(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    univerсity_id = models.ForeignKey(Univercity, on_delete=models.CASCADE, null=True, blank=True)
     group_id = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)

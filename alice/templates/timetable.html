@@ -1,0 +1,429 @@
+{% extends 'navbar.html' %}
+
+{% block content %}
+
+
+    {##}
+    {#    <table class="table table-bordered">#}
+    {#        <thead>#}
+    {#        <tr>#}
+    {#            <th scope="col">#</th>#}
+    {#            <th scope="col">First</th>#}
+    {#        </tr>#}
+    {#        </thead>#}
+    {#        <tbody>#}
+    {#        <tr>#}
+    {#            <th scope="row">1</th>#}
+    {#            <td>#}
+    {#                <ul class="list-group">#}
+    {#                    <li class="list-group-item">Cras justo odio</li>#}
+    {#                    <li class="list-group-item">Dapibus ac facilisis in</li>#}
+    {#                    <li class="list-group-item">Morbi leo risus</li>#}
+    {#                    <li class="list-group-item">Porta ac consectetur ac</li>#}
+    {#                    <li class="list-group-item">Vestibulum at eros</li>#}
+    {#                </ul>#}
+    {#            </td>#}
+    {#        </tr>#}
+    {#        <tr>#}
+    {#            <th scope="row">2</th>#}
+    {#            <td>#}
+    {#                <ul class="list-group">#}
+    {#                    <li class="list-group-item">Cras justo odio</li>#}
+    {#                    <li class="list-group-item">Dapibus ac facilisis in</li>#}
+    {#                    <li class="list-group-item">Morbi leo risus</li>#}
+    {#                    <li class="list-group-item">Porta ac consectetur ac</li>#}
+    {#                    <li class="list-group-item">Vestibulum at eros</li>#}
+    {#                </ul>#}
+    {#            </td>#}
+    {#        </tr>#}
+    {#        </tbody>#}
+    {#    </table>#}
+
+
+
+
+
+
+
+
+
+
+    <h4 class="center-text">Расписание</h4>
+    {% if user.is_authenticated %}
+        {% if error %}
+            <h6 class="center-text">{{ error }}</h6>
+
+        {% else %}
+            <div class="card-columns">
+
+                <div class="card p-3">
+                    <table class="table table-dark">
+                        <thead>
+                        <h4 class="center-text">По нечетным</h4>
+                        </thead>
+                        <tbody>
+                        {% if mon_len %}
+                            <tr>
+                                <th scope="row">Пн</th>
+                                <td>
+                                    <table class="table table-bordered table-dark">
+                                        <thead></thead>
+                                        {% for lesson in mon %}
+                                            {% if lesson.repeat == 0 or lesson.repeat == 1 %}
+
+                                                <tr class="small-table">
+                                                    <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
+                                                        {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
+                                                    <th scope="col">{{ lesson.name }}</th>
+                                                    <th scope="col">{{ lesson.type }}</th>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </table>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if tue_len %}
+                            <tr>
+                                <th scope="row">Вт</th>
+                                <td>
+                                    <table class="table table-bordered table-dark">
+                                        <thead></thead>
+                                        {% for lesson in tue %}
+                                            {% if lesson.repeat == 0 or lesson.repeat == 1 %}
+
+                                                <tr class="small-table">
+                                                    <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
+                                                        {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
+                                                    <th scope="col">{{ lesson.name }}</th>
+                                                    <th scope="col">{{ lesson.type }}</th>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </table>
+
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if wed_len %}
+                            <tr>
+                                <th scope="row">Ср</th>
+                                <td>
+                                    <table class="table table-bordered table-dark">
+                                        <thead></thead>
+                                        {% for lesson in wed %}
+                                            {% if lesson.repeat == 0 or lesson.repeat == 1 %}
+
+                                                <tr class="small-table">
+                                                    <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
+                                                        {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
+                                                    <th scope="col">{{ lesson.name }}</th>
+                                                    <th scope="col">{{ lesson.type }}</th>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </table>
+                                    <h3 class="center-text">Занятий нет</h3>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if thu_len %}
+                            <tr>
+                                <th scope="row">Чт</th>
+                                <td>
+                                    <table class="table table-bordered table-dark">
+                                        <thead></thead>
+                                        {% for lesson in thu %}
+                                            {% if lesson.repeat == 0 or lesson.repeat == 1 %}
+
+                                                <tr class="small-table">
+                                                    <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
+                                                        {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
+                                                    <th scope="col">{{ lesson.name }}</th>
+                                                    <th scope="col">{{ lesson.type }}</th>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </table>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if fri_len %}
+                            <tr>
+                                <th scope="row">Пт</th>
+                                <td>
+                                    <table class="table table-bordered table-dark">
+                                        <thead></thead>
+                                        {% for lesson in fri %}
+                                            {% if lesson.repeat == 0 or lesson.repeat == 1 %}
+
+                                                <tr class="small-table">
+                                                    <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
+                                                        {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
+                                                    <th scope="col">{{ lesson.name }}</th>
+                                                    <th scope="col">{{ lesson.type }}</th>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </table>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if sat_len %}
+                            <tr>
+                                <th scope="row">Сб</th>
+                                <td>
+                                    <table class="table table-bordered table-dark">
+                                        <thead></thead>
+                                        {% for lesson in sat %}
+                                            {% if lesson.repeat == 0 or lesson.repeat == 1 %}
+
+                                                <tr class="small-table">
+                                                    <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
+                                                        {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
+                                                    <th scope="col">{{ lesson.name }}</th>
+                                                    <th scope="col">{{ lesson.type }}</th>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </table>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if sun_len %}
+                            <tr>
+                                <th scope="row">Вс</th>
+                                <td>
+                                    <table class="table table-bordered table-dark">
+                                        <thead></thead>
+                                        {% for lesson in sun %}
+                                            {% if lesson.repeat == 0 or lesson.repeat == 1 %}
+
+                                                <tr class="small-table">
+                                                    <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
+                                                        {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
+                                                    <th scope="col">{{ lesson.name }}</th>
+                                                    <th scope="col">{{ lesson.type }}</th>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </table>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div class="card p-3">
+                    <table class="table table-dark">
+                        <thead>
+                        <h4 class="center-text">По четным</h4>
+                        </thead>
+                        <tbody>
+                        {% if mon_len %}
+                            <tr>
+                                <th scope="row">Пн</th>
+                                <td>
+                                    <table class="table table-bordered table-dark">
+                                        <thead></thead>
+                                        {% for lesson in mon %}
+                                            {% if lesson.repeat == 0 or lesson.repeat == 2 %}
+
+                                                <tr class="small-table">
+                                                    <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
+                                                        {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
+                                                    <th scope="col">{{ lesson.name }}</th>
+                                                    <th scope="col">{{ lesson.type }}</th>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </table>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if tue_len %}
+                            <tr>
+                                <th scope="row">Вт</th>
+                                <td>
+                                    <table class="table table-bordered table-dark">
+                                        <thead></thead>
+                                        {% for lesson in tue %}
+                                            {% if lesson.repeat == 0 or lesson.repeat == 2 %}
+
+                                                <tr class="small-table">
+                                                    <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
+                                                        {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
+                                                    <th scope="col">{{ lesson.name }}</th>
+                                                    <th scope="col">{{ lesson.type }}</th>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </table>
+
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if wed_len %}
+                            <tr>
+                                <th scope="row">Ср</th>
+                                <td>
+                                    <table class="table table-bordered table-dark">
+                                        <thead></thead>
+                                        {% for lesson in wed %}
+                                            {% if lesson.repeat == 0 or lesson.repeat == 2 %}
+
+                                                <tr class="small-table">
+                                                    <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
+                                                        {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
+                                                    <th scope="col">{{ lesson.name }}</th>
+                                                    <th scope="col">{{ lesson.type }}</th>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </table>
+                                    <h3 class="center-text">Занятий нет</h3>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if thu_len %}
+                            <tr>
+                                <th scope="row">Чт</th>
+                                <td>
+                                    <table class="table table-bordered table-dark">
+                                        <thead></thead>
+                                        {% for lesson in thu %}
+                                            {% if lesson.repeat == 0 or lesson.repeat == 2 %}
+
+                                                <tr class="small-table">
+                                                    <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
+                                                        {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
+                                                    <th scope="col">{{ lesson.name }}</th>
+                                                    <th scope="col">{{ lesson.type }}</th>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </table>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if fri_len %}
+                            <tr>
+                                <th scope="row">Пт</th>
+                                <td>
+                                    <table class="table table-bordered table-dark">
+                                        <thead></thead>
+                                        {% for lesson in fri %}
+                                            {% if lesson.repeat == 0 or lesson.repeat == 2 %}
+
+                                                <tr class="small-table">
+                                                    <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
+                                                        {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
+                                                    <th scope="col">{{ lesson.name }}</th>
+                                                    <th scope="col">{{ lesson.type }}</th>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </table>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if sat_len %}
+                            <tr>
+                                <th scope="row">Сб</th>
+                                <td>
+                                    <table class="table table-bordered table-dark">
+                                        <thead></thead>
+                                        {% for lesson in sat %}
+                                            {% if lesson.repeat == 0 or lesson.repeat == 2 %}
+
+                                                <tr class="small-table">
+                                                    <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
+                                                        {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
+                                                    <th scope="col">{{ lesson.name }}</th>
+                                                    <th scope="col">{{ lesson.type }}</th>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </table>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if sun_len %}
+                            <tr>
+                                <th scope="row">Вс</th>
+                                <td>
+                                    <table class="table table-bordered table-dark">
+                                        <thead></thead>
+                                        {% for lesson in sun %}
+                                            {% if lesson.repeat == 0 or lesson.repeat == 2 %}
+
+                                                <tr class="small-table">
+                                                    <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
+                                                        {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
+                                                    <th scope="col">{{ lesson.name }}</th>
+                                                    <th scope="col">{{ lesson.type }}</th>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </table>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+                <div class="card bg-primary text-white text-center p-3">
+                    <blockquote class="blockquote mb-0">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat.</p>
+                        <footer class="blockquote-footer text-white">
+                            <small>
+                                Someone famous in <cite title="Source Title">Source Title</cite>
+                            </small>
+                        </footer>
+                    </blockquote>
+                </div>
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">This card has a regular title and short paragraphy of text below it.</p>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="..." class="card-img-top" alt="...">
+                </div>
+                <div class="card p-3 text-right">
+                    <blockquote class="blockquote mb-0">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+                        <footer class="blockquote-footer">
+                            <small class="text-muted">
+                                Someone famous in <cite title="Source Title">Source Title</cite>
+                            </small>
+                        </footer>
+                    </blockquote>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">This is another card with title and supporting text below. This card has some additional content to make it slightly taller overall.</p>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        <h6 class="center-text">Для просмотра расписания, вам необходимо авторизироваться.</h6>
+    {% endif %}
+
+
+{% endblock %}

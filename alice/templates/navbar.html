@@ -14,7 +14,22 @@
     <style>
         .navbar {background-color: #242331 !important;}
 
-        body {background-color: #232230;}
+        body {
+            background-color: #232230;
+            color: white;
+        }
+
+        .list-group {
+            background-color: #232230 !important;
+        }
+
+        .list-group-item {
+            background-color: #232230 !important;
+        }
+
+        .center-text {
+            text-align: center;
+        }
 
         .card {
             margin: auto;
@@ -29,14 +44,19 @@
             position: relative;
         }
 
+        .table {
+            background-color: #2b2d3e !important;
+        }
 
+        .small-table {
+            background-color: #232230;
+            font-size: small !important;
+        }
 
     </style>
 
 </head>
 <body class="body">
-
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="background: black">
     <a class="navbar-brand" href="">Главная</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,11 +65,11 @@
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'add_timetable' %}">Расписание <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{% url 'timetable' %}">Расписание <span class="sr-only">(current)</span></a>
             </li>
         </ul>
         <span class="navbar-text">
-            {% if user %}
+            {% if user.is_authenticated %}
                 <form action="{% url 'logout' %}">
                     <button type="submit" class="btn btn-outline-light">Выйти</button>
                 </form>
