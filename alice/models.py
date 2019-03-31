@@ -12,6 +12,8 @@ class Univercity(models.Model):
 class Group(models.Model):
     name = models.CharField(max_length=20)
     readable_name = models.CharField(max_length=20, default=name)
+    start_date = models.DateField(auto_now=False, null=True)
+    end_date = models.DateField(auto_now=False, null=True)
     univerсity_id = models.ForeignKey(Univercity, on_delete=models.CASCADE, null=True, blank=True)
 
 
@@ -42,3 +44,9 @@ class SiteUsers(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     univerсity_id = models.ForeignKey(Univercity, on_delete=models.CASCADE, null=True, blank=True)
     group_id = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
+    admin = models.BooleanField(default=False)
+
+
+class Admin(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    group_id = models.ForeignKey(Group, on_delete=models.CASCADE)

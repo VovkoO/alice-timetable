@@ -1,0 +1,179 @@
+{% extends 'navbar.html' %}
+
+
+{% block content %}
+
+    <div class="card">
+    <br>
+        <h5 class="center-text">{{ message }}</h5>
+        <div class="card-body">
+            <form class="form-horizontal" name="lesson" method="post" action="{% url 'add_lesson' %}">{% csrf_token %}
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Предмет</label>
+                    <div class="col-sm-10">
+                        <input required class="form-control" type="text" name="lesson"><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Преподаватель</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" type="text" name="teacher"><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Аудитория</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" type="text" name="classroom"><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Начало</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" name="start_time" type="time" required><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Конец</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" name="end_time" type="time" required><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Тип</label>
+                    <div class="col-sm-10">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type" id="lk" value="лк">
+                            <label class="form-check-label" for="inlineRadio1">Лекция</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type" id="pr" value="пр">
+                            <label class="form-check-label" for="inlineRadio2">Практика</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type" id="sem" value="сем">
+                            <label class="form-check-label" for="inlineRadio3">Семинар</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type" id="zach" value="зач">
+                            <label class="form-check-label" for="inlineRadio2">Зачет</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type" id="lab" value="лаб">
+                            <label class="form-check-label" for="inlineRadio2">Лабораторная работа</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type" id="kons" value="конс">
+                            <label class="form-check-label" for="inlineRadio2">Консультация</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type" id="ekz" value="экз">
+                            <label class="form-check-label" for="inlineRadio2">Экзамен</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type" id="sr" value="ср">
+                            <label class="form-check-label" for="inlineRadio1">Самостоятельная работа</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type" id="film" value="фильм">
+                            <label class="form-check-label" for="inlineRadio1">Фильм</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type" id="none" value="" checked>
+                            <label class="form-check-label" for="inlineRadio1">Не указан</label>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+                            <label class="form-check-label" for="exampleRadios1">
+                                Переодически
+                            </label>
+                        </div>
+                    </label>
+                    <div class="col-sm-10">
+                        <div class="card-body">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="day_of_week" id="monday" value="0" checked>
+                                <label class="form-check-label" for="inlineRadio1">Пн</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="day_of_week" id="tuesday" value="1">
+                                <label class="form-check-label" for="inlineRadio2">Вт</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="day_of_week" id="wednesday" value="2">
+                                <label class="form-check-label" for="inlineRadio3">Ср</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="day_of_week" id="thursday" value="3">
+                                <label class="form-check-label" for="inlineRadio2">Чт</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="day_of_week" id="friday" value="4">
+                                <label class="form-check-label" for="inlineRadio2">Пт</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="day_of_week" id="saturday" value="5">
+                                <label class="form-check-label" for="inlineRadio2">Сб</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="day_of_week" id="sunday" value="6">
+                                <label class="form-check-label" for="inlineRadio2">Вс</label>
+                            </div>
+                            <br>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="repeat" id="each_week" value="0" checked>
+                                <label class="form-check-label" for="exampleRadios1">
+                                    Каждую неделю
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="repeat" id="uneven_week" value="1">
+                                <label class="form-check-label" for="exampleRadios3">
+                                    По нечетным
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="repeat" id="even_week" value="2">
+                                <label class="form-check-label" for="exampleRadios2">
+                                    По четными
+                                </label>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+                            <label class="form-check-label" for="exampleRadios2">
+                                Произвольные даты
+                            </label>
+                        </div>
+                    </label>
+                    <div class="col-sm-10">
+                        <div class="card-body">
+
+                            <br>
+                        </div>
+                    </div>
+                </div>
+
+                <div align="right">
+                    <button type="submit" name="add_lesson" class="btn btn-outline-light">Добавить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br><br>
+
+{% endblock %}

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 from django.contrib import auth
-from .models import SiteUsers, Group, Lesson
+from .models import SiteUsers, Group, Lesson, User, Univercity, Admin
 import json
 from . import site_backend, alice_backend
 
@@ -37,8 +37,14 @@ def home_page(request):
 def timetable(request):
     if auth.get_user(request).is_authenticated:
         try:
+            ##Если пользователь уже выбрал расписание
             user = SiteUsers.objects.get(user_id=auth.get_user(request))
             group = user.group_id
+            try:
+                Admin.objects.get(user_id=auth.get_user(request), group_id=group)
+                admin = True
+            except Admin.DoesNotExist:
+                admin = False
             lessons = Lesson.objects.filter(group_id=group)
             mon = lessons.filter(day_of_week=0)
             tue = lessons.filter(day_of_week=1)
@@ -47,52 +53,175 @@ def timetable(request):
             fri = lessons.filter(day_of_week=4)
             sat = lessons.filter(day_of_week=5)
             sun = lessons.filter(day_of_week=6)
+            tomorrow = site_backend.get_tomorrow_lessons(SiteUsers.objects.get(user_id=auth.get_user(request)).group_id)
+
+            admin_message = ''
+            if request.method == 'POST':
+
+                ##Выбрать другое расписание
+                if 'change_timetable' in request.POST:
+                    user.delete()
+                    return redirect('timetable')
+
+
+                ##Если посльзователь выбирает расписание
+                if 'choose_timetable' in request.POST:
+                    univercity_input = request.POST.get('unibercity')
+                    try:
+                        univercity = Univercity.objects.get(name=univercity_input)
+                    except Univercity.DoesNotExist:
+                        try:
+                            readable_univercity_input = univercity_input.lower().replace(' ', '').replace('-', '')
+                            univercity = Univercity.objects.get(readable_name=readable_univercity_input)
+                        except Univercity.DoesNotExist:
+                            return render(request, 'timetable.html', {'does_not_exist': 'Для такого ВУЗа нет расписания',
+                                                                      'user': auth.get_user(request)})
+                    try:
+                        group_input = request.POST.get('group')
+                        group = Group.objects.get(univerсity_id=univercity, name=group_input)
+                        SiteUsers.objects.create(user_id=auth.get_user(request), univerсity_id=univercity,
+                                                 group_id=group)
+                        return redirect('timetable')
+                    except Group.DoesNotExist:
+                        readable_group_input = group_input.lower().replace(' ', '').replace('-', '')
+                        try:
+                            group = Group.objects.get(univerсity_id=univercity, readable_name=readable_group_input)
+                            SiteUsers.objects.create(user_id=auth.get_user(request), univerсity_id=univercity,
+                                                     group_id=group)
+                            return redirect('timetable')
+                        except Group.DoesNotExist:
+                            return render(request, 'timetable.html', {'does_not_exist': 'Для такой группы нет расписания',
+                                                                      'user': auth.get_user(request)})
+
+                ##Добавление нового админа
+                if 'add_admin' in request.POST:
+                    email = request.POST.get('email')
+                    try:
+                        new_admin = User.objects.get(email=email)
+                        try:
+                            new_admin = Admin.objects.get(user_id=new_admin, group_id=group)
+                            admin_message = email + ' уже является админом.'
+                        except Admin.DoesNotExist:
+                            Admin.objects.create(user_id=new_admin, group_id=group)
+                            admin_message = email + ' теперь является админом.'
+                    except User.DoesNotExist:
+                        admin_message = 'Такого пользователя не существует.'
 
             response = {
                 'user': auth.get_user(request),
+                'admin': admin,
+                'group': group.name,
+                'admin_message': admin_message,
                 'mon': mon,
-                'mon_len': len(mon) > 0,
+                'mon1_len': len(mon.filter(repeat=0)) + len(mon.filter(repeat=1)) > 0,
+                'mon2_len': len(mon.filter(repeat=0)) + len(mon.filter(repeat=2)) > 0,
                 'tue': tue,
-                'tue_len': len(tue) > 0,
+                'tue1_len': len(tue.filter(repeat=0)) + len(tue.filter(repeat=1)) > 0,
+                'tue2_len': len(tue.filter(repeat=0)) + len(tue.filter(repeat=2)) > 0,
                 'wed': wed,
-                'wed_len': len(wed) > 0,
+                'wed1_len': len(wed.filter(repeat=0)) + len(wed.filter(repeat=1)) > 0,
+                'wed2_len': len(wed.filter(repeat=0)) + len(wed.filter(repeat=2)) > 0,
                 'thu': thu,
-                'thu_len': len(thu) > 0,
+                'thu1_len': len(thu.filter(repeat=0)) + len(thu.filter(repeat=1)) > 0,
+                'thu2_len': len(thu.filter(repeat=0)) + len(thu.filter(repeat=2)) > 0,
                 'fri': fri,
-                'fri_len': len(fri) > 0,
+                'fri1_len': len(fri.filter(repeat=0)) + len(fri.filter(repeat=1)) > 0,
+                'fri2_len': len(fri.filter(repeat=0)) + len(fri.filter(repeat=2)) > 0,
                 'sat': sat,
-                'sat_len': len(sat) > 0,
+                'sat1_len': len(sat.filter(repeat=0)) + len(sat.filter(repeat=1)) > 0,
+                'sat2_len': len(sat.filter(repeat=0)) + len(sat.filter(repeat=2)) > 0,
                 'sun': sun,
-                'sun_len': len(sun) > 0
+                'sun1_len': len(sun.filter(repeat=0)) + len(sun.filter(repeat=1)) > 0,
+                'sun2_len': len(sun.filter(repeat=0)) + len(sun.filter(repeat=2)) > 0,
+                'tomorrow': tomorrow,
+                'tomorrow_len': len(tomorrow) > 0
             }
+
             return render(request, 'timetable.html', response)
 
         except SiteUsers.DoesNotExist:
-            return render(request, 'timetable.html', {'user': auth.get_user(request), 'error': 'У вас нет расписания, создайте его, либо, попросите '
-                                                               'доступ к нему у другого человека, который его создал'})
+            if request.method == 'POST':
+                ##Если посльзователь выбирает расписание
+                if 'choose_timetable' in request.POST:
+                    univercity_input = request.POST.get('univercity')
+                    try:
+                        univercity = Univercity.objects.get(name=univercity_input)
+                    except Univercity.DoesNotExist:
+                        try:
+                            readable_univercity_input = univercity_input.lower().replace(' ', '').replace('-', '')
+                            univercity = Univercity.objects.get(readable_name=readable_univercity_input)
+                        except Univercity.DoesNotExist:
+                            return render(request, 'timetable.html', {'does_not_exist': 'Для такого ВУЗа нет расписания',
+                                                                      'user': auth.get_user(request),
+                                                                      'site_user_does_not_exist': '-'})
+                    try:
+                        group_input = request.POST.get('group')
+                        group = Group.objects.get(univerсity_id=univercity, name=group_input)
+                        SiteUsers.objects.create(user_id=auth.get_user(request), univerсity_id=univercity,
+                                                 group_id=group)
+                        return redirect('timetable')
+                    except Group.DoesNotExist:
+                        readable_group_input = group_input.lower().replace(' ', '').replace('-', '')
+                        try:
+                            group = Group.objects.get(univerсity_id=univercity, readable_name=readable_group_input)
+                            SiteUsers.objects.create(user_id=auth.get_user(request), univerсity_id=univercity,
+                                                     group_id=group)
+                            return redirect('timetable')
+                        except Group.DoesNotExist:
+                            return render(request, 'timetable.html', {'does_not_exist': 'Для такой группы нет расписания',
+                                                                      'user': auth.get_user(request),
+                                                                      'site_user_does_not_exist': '-'})
+
+            return render(request, 'timetable.html', {'user': auth.get_user(request),
+                                                      'site_user_does_not_exist': 'У вас нет расписания, создайте его, либо, попросите '
+                                                                                  'доступ к нему у другого человека, который его создал'})
     return render(request, 'timetable.html', {'user': auth.get_user(request)})
 
 
-def add_timetable(request):
+def change_lesson(request):
     if request.method == 'POST':
-        univercity_name = request.POST.get('univercity')
-        group_name = request.POST.get('group')
+        lesson = request.POST.get('lesson')
+
+
+def add_timetable(request):
+    # if request.method == 'POST':
+    #     group_name = request.POST.get('group')
+    #     lesson = request.POST.get('lesson')
+    #     teacher = request.POST.get('teacher')
+    #     classroom = request.POST.get('classroom')
+    #     start_time = request.POST.get('start_time')
+    #     end_time = request.POST.get('end_time')
+    #     day_of_week = request.POST.get('day_of_week')
+    #     start_date = request.POST.get('start_date')
+    #     end_date = request.POST.get('end_date')
+    #     repeat = request.POST.get('repeat')
+    #     success = site_backend.add_lesson(group_name, lesson, teacher, classroom, start_time, end_time, day_of_week,
+    #                                       start_date, end_date, repeat)
+    #     if success:
+    #         return render(request, 'add_timetable.html', {'if_add': 'Предмет добавлен'})
+    #     else:
+    #         return render(request, 'add_timetable.html', {'if_add': 'Даты не добавлены'})
+    return render(request, 'add_timetable.html', {'user': auth.get_user(request)})
+
+
+def add_lesson(request):
+    if request.method == 'POST':
+        user = SiteUsers.objects.get(user_id=auth.get_user(request))
+        group_name = user.group_id
         lesson = request.POST.get('lesson')
         teacher = request.POST.get('teacher')
         classroom = request.POST.get('classroom')
         start_time = request.POST.get('start_time')
         end_time = request.POST.get('end_time')
+        start_date = user.group_id.start_date
+        end_date = user.group_id.end_date
         day_of_week = request.POST.get('day_of_week')
-        start_date = request.POST.get('start_date')
-        end_date = request.POST.get('end_date')
         repeat = request.POST.get('repeat')
-        success = site_backend.add_to_db(univercity_name, group_name, lesson, teacher, classroom, start_time, end_time, day_of_week,
-                                         start_date, end_date, repeat)
-        if success:
-            return render(request, 'add_timetable.html', {'if_add': 'Предмет добавлен'})
-        else:
-            return render(request, 'add_timetable.html', {'if_add': 'Даты не добавлены'})
-    return render(request, 'add_timetable.html', {'user': auth.get_user(request)})
+        type = request.POST.get('type')
+        success = site_backend.add_lesson(group_name, lesson, teacher, classroom, start_time, end_time,
+                                          day_of_week, repeat, type, start_date, end_date)
+        return render(request, 'add_lesson.html', {'message': success, 'user': auth.get_user(request)})
+    return render(request, 'add_lesson.html', {'user': auth.get_user(request)})
 
 
 def login(request):
@@ -102,7 +231,7 @@ def login(request):
         user = auth.authenticate(username=email, password=password)
         if user is not None:
             auth.login(request, user)
-            return render(request, 'add_timetable.html', {'user': auth.get_user(request)})
+            return redirect('timetable')
         else:
             return render(request, 'login.html', {'error': 'Нерпавильный email или пароль', 'user': auth.get_user(request)})
     return render(request, 'login.html', {'user': auth.get_user(request)})
@@ -110,4 +239,4 @@ def login(request):
 
 def logout(request):
     auth.logout(request)
-    return render(request, 'add_timetable.html', {'user': auth.get_user(request)})
+    return redirect('timetable')

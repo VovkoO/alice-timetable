@@ -12,10 +12,13 @@
     <title>Расписание</title>
 
     <style>
-        .navbar {background-color: #242331 !important;}
+        .navbar {background-color: #1a1e34 !important;}
 
         body {
-            background-color: #232230;
+            background-image: url("https://images.pexels.com/photos/1308624/pexels-photo-1308624.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
+        {#background-color: #1e1e2f;#}
+        {#background: linear-gradient(to bottom, #0D0E26, #090A1B);#}
+            {#background: linear-gradient(to bottom, #a22dee, #5e52d1);#}
             color: white;
         }
 
@@ -53,6 +56,42 @@
             font-size: small !important;
         }
 
+        .form-control {
+            color: rgba(255,255,255,0.8) !important;
+            background-color: initial !important;
+            border-color: #2b3553 !important;
+            border-radius: .4285rem !important;
+            font-size: .75rem;
+        }
+
+        .col-sm-2 {
+            color: rgba(255,255,255,0.6);
+            text-align: right;
+            font-size: 12px;
+            margin: 0px 0px 5px;
+            padding: 10px 5px 0px 15px;
+        }
+
+        .form-check {
+            color: rgba(255,255,255,0.8) !important;
+            font-size: 12px;
+
+        }
+
+        .message {
+            color: rgba(255,255,255,0.6);
+            font-size: 12px;
+            text-align: left !important;
+        }
+
+        .btn-link {
+            font-size: 13px;
+            color: white;
+            border: none;
+            text-align: left;
+        }
+
+
     </style>
 
 </head>
@@ -73,7 +112,7 @@
                 <form action="{% url 'logout' %}">
                     <button type="submit" class="btn btn-outline-light">Выйти</button>
                 </form>
-            {% else%}
+            {% else %}
                 <form action="{% url 'login' %}">
                     <button type="submit" class="btn btn-outline-light">Войти</button>
                 </form>

@@ -2,56 +2,53 @@
 
 {% block content %}
 
-
-    {##}
-    {#    <table class="table table-bordered">#}
-    {#        <thead>#}
-    {#        <tr>#}
-    {#            <th scope="col">#</th>#}
-    {#            <th scope="col">First</th>#}
-    {#        </tr>#}
-    {#        </thead>#}
-    {#        <tbody>#}
-    {#        <tr>#}
-    {#            <th scope="row">1</th>#}
-    {#            <td>#}
-    {#                <ul class="list-group">#}
-    {#                    <li class="list-group-item">Cras justo odio</li>#}
-    {#                    <li class="list-group-item">Dapibus ac facilisis in</li>#}
-    {#                    <li class="list-group-item">Morbi leo risus</li>#}
-    {#                    <li class="list-group-item">Porta ac consectetur ac</li>#}
-    {#                    <li class="list-group-item">Vestibulum at eros</li>#}
-    {#                </ul>#}
-    {#            </td>#}
-    {#        </tr>#}
-    {#        <tr>#}
-    {#            <th scope="row">2</th>#}
-    {#            <td>#}
-    {#                <ul class="list-group">#}
-    {#                    <li class="list-group-item">Cras justo odio</li>#}
-    {#                    <li class="list-group-item">Dapibus ac facilisis in</li>#}
-    {#                    <li class="list-group-item">Morbi leo risus</li>#}
-    {#                    <li class="list-group-item">Porta ac consectetur ac</li>#}
-    {#                    <li class="list-group-item">Vestibulum at eros</li>#}
-    {#                </ul>#}
-    {#            </td>#}
-    {#        </tr>#}
-    {#        </tbody>#}
-    {#    </table>#}
-
-
-
-
-
-
-
-
-
-
-    <h4 class="center-text">Расписание</h4>
+    <h4 class="center-text">Расписание {{ group }}</h4>
     {% if user.is_authenticated %}
-        {% if error %}
-            <h6 class="center-text">{{ error }}</h6>
+
+        {% if site_user_does_not_exist %}
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Выбрать расписание</h5>
+                            <form name="choose_timetable" method="post" action="{% url 'timetable' %}">{% csrf_token %}
+                                <div class="form-group">
+                                    <input required class="form-control" type="text" name="univercity" placeholder="ВУЗ">
+                                </div><br>
+                                <div class="form-group">
+                                    <input required class="form-control" type="text" name="group" placeholder="Группа">
+                                </div>
+                                <p class="message">{{ does_not_exist }}</p>
+                                <div align="right">
+                                    <button type="submit" class="btn btn-outline-light" name="choose_timetable">Выбрать</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Добавить расписание</h5>
+                            <form name="choose_timetable" method="post" action="{% url 'timetable' %}">{% csrf_token %}
+                                <div class="form-group">
+                                    <input required class="form-control" type="text" name="univercity" placeholder="ВУЗ">
+                                </div><br>
+                                <div class="form-group">
+                                    <input required class="form-control" type="text" name="group" placeholder="Группа">
+                                </div>
+                                <div align="right">
+                                    <button type="submit" class="btn btn-outline-light" name="add_timetable">Добавить</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
 
         {% else %}
             <div class="card-columns">
@@ -59,10 +56,10 @@
                 <div class="card p-3">
                     <table class="table table-dark">
                         <thead>
-                        <h4 class="center-text">По нечетным</h4>
+                        <h5 class="center-text">По нечетным</h5>
                         </thead>
                         <tbody>
-                        {% if mon_len %}
+                        {% if mon1_len %}
                             <tr>
                                 <th scope="row">Пн</th>
                                 <td>
@@ -74,7 +71,10 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                    <th scope="col">{{ lesson.name }}</th>
+                                                    <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" value="{{ lesson }}">
+                                                        <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
+                                                    </form>
                                                     <th scope="col">{{ lesson.type }}</th>
                                                 </tr>
                                             {% endif %}
@@ -83,7 +83,7 @@
                                 </td>
                             </tr>
                         {% endif %}
-                        {% if tue_len %}
+                        {% if tue1_len %}
                             <tr>
                                 <th scope="row">Вт</th>
                                 <td>
@@ -95,7 +95,10 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                    <th scope="col">{{ lesson.name }}</th>
+                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" value="{{ lesson }}">
+                                                        <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
+                                                    </form>
                                                     <th scope="col">{{ lesson.type }}</th>
                                                 </tr>
                                             {% endif %}
@@ -105,7 +108,7 @@
                                 </td>
                             </tr>
                         {% endif %}
-                        {% if wed_len %}
+                        {% if wed1_len %}
                             <tr>
                                 <th scope="row">Ср</th>
                                 <td>
@@ -117,17 +120,19 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                    <th scope="col">{{ lesson.name }}</th>
+                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" value="{{ lesson }}">
+                                                        <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
+                                                    </form>
                                                     <th scope="col">{{ lesson.type }}</th>
                                                 </tr>
                                             {% endif %}
                                         {% endfor %}
                                     </table>
-                                    <h3 class="center-text">Занятий нет</h3>
                                 </td>
                             </tr>
                         {% endif %}
-                        {% if thu_len %}
+                        {% if thu1_len %}
                             <tr>
                                 <th scope="row">Чт</th>
                                 <td>
@@ -139,7 +144,10 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                    <th scope="col">{{ lesson.name }}</th>
+                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" value="{{ lesson }}">
+                                                        <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
+                                                    </form>
                                                     <th scope="col">{{ lesson.type }}</th>
                                                 </tr>
                                             {% endif %}
@@ -148,7 +156,7 @@
                                 </td>
                             </tr>
                         {% endif %}
-                        {% if fri_len %}
+                        {% if fri1_len %}
                             <tr>
                                 <th scope="row">Пт</th>
                                 <td>
@@ -160,7 +168,10 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                    <th scope="col">{{ lesson.name }}</th>
+                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" value="{{ lesson }}">
+                                                        <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
+                                                    </form>
                                                     <th scope="col">{{ lesson.type }}</th>
                                                 </tr>
                                             {% endif %}
@@ -169,7 +180,7 @@
                                 </td>
                             </tr>
                         {% endif %}
-                        {% if sat_len %}
+                        {% if sat1_len %}
                             <tr>
                                 <th scope="row">Сб</th>
                                 <td>
@@ -181,7 +192,10 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                    <th scope="col">{{ lesson.name }}</th>
+                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" value="{{ lesson }}">
+                                                        <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
+                                                    </form>
                                                     <th scope="col">{{ lesson.type }}</th>
                                                 </tr>
                                             {% endif %}
@@ -190,7 +204,7 @@
                                 </td>
                             </tr>
                         {% endif %}
-                        {% if sun_len %}
+                        {% if sun1_len %}
                             <tr>
                                 <th scope="row">Вс</th>
                                 <td>
@@ -202,7 +216,10 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                    <th scope="col">{{ lesson.name }}</th>
+                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" value="{{ lesson }}">
+                                                        <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
+                                                    </form>
                                                     <th scope="col">{{ lesson.type }}</th>
                                                 </tr>
                                             {% endif %}
@@ -219,10 +236,10 @@
                 <div class="card p-3">
                     <table class="table table-dark">
                         <thead>
-                        <h4 class="center-text">По четным</h4>
+                        <h5 class="center-text">По четным</h5>
                         </thead>
                         <tbody>
-                        {% if mon_len %}
+                        {% if mon2_len %}
                             <tr>
                                 <th scope="row">Пн</th>
                                 <td>
@@ -234,7 +251,10 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                    <th scope="col">{{ lesson.name }}</th>
+                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" value="{{ lesson }}">
+                                                        <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
+                                                    </form>
                                                     <th scope="col">{{ lesson.type }}</th>
                                                 </tr>
                                             {% endif %}
@@ -243,7 +263,7 @@
                                 </td>
                             </tr>
                         {% endif %}
-                        {% if tue_len %}
+                        {% if tue2_len %}
                             <tr>
                                 <th scope="row">Вт</th>
                                 <td>
@@ -255,7 +275,10 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                    <th scope="col">{{ lesson.name }}</th>
+                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" value="{{ lesson }}">
+                                                        <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
+                                                    </form>
                                                     <th scope="col">{{ lesson.type }}</th>
                                                 </tr>
                                             {% endif %}
@@ -265,7 +288,7 @@
                                 </td>
                             </tr>
                         {% endif %}
-                        {% if wed_len %}
+                        {% if wed2_len %}
                             <tr>
                                 <th scope="row">Ср</th>
                                 <td>
@@ -277,17 +300,19 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                    <th scope="col">{{ lesson.name }}</th>
+                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" value="{{ lesson }}">
+                                                        <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
+                                                    </form>
                                                     <th scope="col">{{ lesson.type }}</th>
                                                 </tr>
                                             {% endif %}
                                         {% endfor %}
                                     </table>
-                                    <h3 class="center-text">Занятий нет</h3>
                                 </td>
                             </tr>
                         {% endif %}
-                        {% if thu_len %}
+                        {% if thu2_len %}
                             <tr>
                                 <th scope="row">Чт</th>
                                 <td>
@@ -299,7 +324,10 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                    <th scope="col">{{ lesson.name }}</th>
+                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" value="{{ lesson }}">
+                                                        <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
+                                                    </form>
                                                     <th scope="col">{{ lesson.type }}</th>
                                                 </tr>
                                             {% endif %}
@@ -308,7 +336,7 @@
                                 </td>
                             </tr>
                         {% endif %}
-                        {% if fri_len %}
+                        {% if fri2_len %}
                             <tr>
                                 <th scope="row">Пт</th>
                                 <td>
@@ -320,7 +348,10 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                    <th scope="col">{{ lesson.name }}</th>
+                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" value="{{ lesson }}">
+                                                        <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
+                                                    </form>
                                                     <th scope="col">{{ lesson.type }}</th>
                                                 </tr>
                                             {% endif %}
@@ -329,7 +360,7 @@
                                 </td>
                             </tr>
                         {% endif %}
-                        {% if sat_len %}
+                        {% if sat2_len %}
                             <tr>
                                 <th scope="row">Сб</th>
                                 <td>
@@ -341,7 +372,10 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                    <th scope="col">{{ lesson.name }}</th>
+                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" value="{{ lesson }}">
+                                                        <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
+                                                    </form>
                                                     <th scope="col">{{ lesson.type }}</th>
                                                 </tr>
                                             {% endif %}
@@ -350,7 +384,7 @@
                                 </td>
                             </tr>
                         {% endif %}
-                        {% if sun_len %}
+                        {% if sun2_len %}
                             <tr>
                                 <th scope="row">Вс</th>
                                 <td>
@@ -362,7 +396,10 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                    <th scope="col">{{ lesson.name }}</th>
+                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" value="{{ lesson }}">
+                                                        <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
+                                                    </form>
                                                     <th scope="col">{{ lesson.type }}</th>
                                                 </tr>
                                             {% endif %}
@@ -374,51 +411,97 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="card">
-                    <img src="..." class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+
+                {% if tomorrow_len %}
+                    <div class="card p-3">
+                        <table class="table table-dark" style="padding: 10px !important;">
+                            <thead>
+                            <h5 class="center-text">Завтра</h5>
+                            </thead>
+                            <tbody>
+
+                            <tr>
+                                <td>
+                                    <table class="table table-bordered table-dark">
+                                        <thead></thead>
+                                        {% for lesson in tomorrow %}
+                                            <tr class="small-table">
+                                                <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
+                                                    {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
+                                                <th scope="col">
+                                                    {{ lesson.name }}<br>
+                                                    <span style="font-size: x-small; vertical-align: bottom; font-style: italic">
+                                                            {{ lesson.teacher }}
+                                                        </span>
+                                                </th>
+                                                <th scope="col">
+                                                    {{ lesson.type }}<hr color="#31383e">
+                                                    <span style="font-style: italic">{{ lesson.classroom }}</span>
+                                                </th>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-                <div class="card bg-primary text-white text-center p-3">
-                    <blockquote class="blockquote mb-0">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat.</p>
-                        <footer class="blockquote-footer text-white">
-                            <small>
-                                Someone famous in <cite title="Source Title">Source Title</cite>
-                            </small>
-                        </footer>
-                    </blockquote>
-                </div>
+                {% else %}
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Завтра</h5><hr color="#31383e" style="height: 1px !important;">
+                            <p class="card-text">Пар нет, можно отдохнуть</p>
+                        </div>
+                    </div>
+                {% endif %}
+
                 <div class="card text-center">
                     <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This card has a regular title and short paragraphy of text below it.</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        <h5 class="card-title">Расписание</h5>
+                        {% if admin %}
+                            <form action="{% url 'add_lesson' %}" style="display: inline-block">
+                                <button type="button" class="btn btn-outline-light">Изменить</button>
+                            </form>
+                            <form action="{% url 'add_lesson' %}" style="display: inline-block">
+                                <button type="submit" class="btn btn-outline-light">Дополнить</button>
+                            </form>
+                        {% else %}
+                            Для того, что бы менять или дополнять расписание, попросите разрешене у админа расписания.
+                        {% endif %}
                     </div>
                 </div>
-                <div class="card">
-                    <img src="..." class="card-img-top" alt="...">
-                </div>
-                <div class="card p-3 text-right">
-                    <blockquote class="blockquote mb-0">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                        <footer class="blockquote-footer">
-                            <small class="text-muted">
-                                Someone famous in <cite title="Source Title">Source Title</cite>
-                            </small>
-                        </footer>
-                    </blockquote>
-                </div>
-                <div class="card">
+
+                {% if admin %}
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Добавить админа</h5>
+                            {#                            <p class="message">{{ admin_message }}</p>#}
+                            <form name="add_admin" method="post" action="{% url 'timetable' %}">{% csrf_token %}
+                                <div class="form-group">
+                                    <input required name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Введите email">
+                                </div>
+                                <div align="right">
+                                    <p class="message">{{ admin_message }}</p>
+                                    <button type="submit" class="btn btn-outline-light" name="add_admin">Добавить</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="card text-center">
                     <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This is another card with title and supporting text below. This card has some additional content to make it slightly taller overall.</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        <h5 class="card-title">Выбрать другое расписание</h5>
+                        <form name="add_admin" method="post" action="{% url 'timetable' %}">{% csrf_token %}
+                            <div align="right">
+                                <button type="submit" class="btn btn-outline-light" name="change_timetable">Выбрать</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
+
+
             </div>
         {% endif %}
     {% else %}

@@ -1,11 +1,12 @@
 from django.contrib import admin
-from .models import Univercity, Group, Lesson, Dates, AliceUsers, SiteUsers
+from .models import Univercity, Group, Lesson, Dates, AliceUsers, SiteUsers, Admin
 # Register your models here.
 
 
 
 
 admin.site.register(Univercity)
+admin.site.register(Admin)
 
 
 class GroupAdmin(admin.ModelAdmin):
@@ -23,7 +24,7 @@ class AliceUsersAdmin(admin.ModelAdmin):
     list_display = ('user_id', 'univerсity_id', 'group_id')
 
 class SiteUsersAdmin(admin.ModelAdmin):
-    list_display = ('user_id', 'univerсity_id', 'group_id')
+    list_display = ('user_id', 'univerсity_id', 'group_id', 'admin')
 
 
 
