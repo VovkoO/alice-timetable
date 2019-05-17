@@ -9,24 +9,25 @@ def get_answer(json_request):
     #если у пользователя не указаны данные об университете и группе, то добавляем их
     except AliceUsers.DoesNotExist:
         if json_request['session']['message_id'] == 0:
-            return 'Для начала вам нужно выбрать учебное заведение, в котором вы учитесь. Просто скажите его название.'
+            return 'Здравствуйте, для начала выберете ученое заведение. Просто скажите его название.'
         unicerciry_input = json_request['request']['command']
         try:
             univercity = Univercity.objects.get(name=unicerciry_input)
         except Univercity.DoesNotExist:
-            unicerciry_input = unicerciry_input.replace(' ', '')
+            unicerciry_input = unicerciry_input.replace(' ', '').replace('-', '')
             try:
                 univercity = Univercity.objects.get(readable_name=unicerciry_input)
             except Univercity.DoesNotExist:
-                return 'Для данного учебного заведения не нашлось расписания. Попробуйте произнести еще раз его название,' \
+                return 'Не получилось найти подходящего расписания. Попробуйте произнести еще раз название заведения,' \
                        ' либо добавте свое расписание на сайте.'
         AliceUsers.objects.create(user_id=user_id, univerсity_id=univercity)
-        return 'Вам осталось лишь указать группу, в которой вы учитесь. Произнесите ее кодировку.'
+        ##Пользователь ввел университет, теперь вводит группу
+        return 'Вам осталось указать группу. Произнесите ее название.'
     user_group = alice_user.group_id
     if not user_group:
         print(alice_user.group_id)
         if json_request['session']['message_id'] == 0:
-            return 'Для начала вам нужно выбрать группу, в которой вы учитесь. Просто скажите ее название.'
+            return 'Здравствуйте, для начала вам нужно выбрать группу, в которой учитесь. Просто скажите ее название.'
         group_input = json_request['request']['command']
         try:
             group = Group.objects.get(name=group_input)
@@ -35,12 +36,13 @@ def get_answer(json_request):
             try:
                 group = Group.objects.get(readable_name=group_input)
             except Group.DoesNotExist:
-                return 'Для данной группы не нашлось расписания. Попробуйте произнести еще раз ее название,' \
+                return 'Не получилось найти походящего расписания. Попробуйте произнести еще раз название группы,' \
                        ' либо добавте свое расписание на сайте.'
         alice_user.group_id = group
         alice_user.save()
-        return 'Вы выбрали свое расписание, теперь вы можете узнать у меня расписание на какой-либо день, просто скажите ' \
-               'число, на которе вы хотите его узнать.'
+        return 'Вы выбрали свое расписание, теперь вы можете узнать у меня расписание на какой-либо день, ' \
+               'просто скажите число, на которе вы хотите его узнать.'
+
     if json_request['session']['message_id'] == 0:
         return 'Здравствуйте, на какое число вы бы хотели узнать расписание?'
     if len(json_request['request']['command']) == 0:

@@ -29,7 +29,8 @@ ALLOWED_HOSTS = ['84.201.142.244',
                  'http://alicetime.ru/',
                  'alicetime.ru',
                  'www.alicetime.ru',
-                 '127.0.0.1']
+                 '127.0.0.1',
+                 '0.0.0.0']
 
 
 # Application definition

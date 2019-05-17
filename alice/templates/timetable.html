@@ -39,6 +39,18 @@
                                 <div class="form-group">
                                     <input required class="form-control" type="text" name="group" placeholder="Группа">
                                 </div>
+                                <div class="row">
+                                    <label class="col-sm-2 col-form-label">Начало занятий</label>
+                                    <div class="col-sm-10">
+                                        <input required class="form-control" type="date" name="start_date"><br>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-sm-2 col-form-label">Конец занятий</label>
+                                    <div class="col-sm-10">
+                                        <input required class="form-control" type="date" name="end_date"><br>
+                                    </div>
+                                </div>
                                 <div align="right">
                                     <button type="submit" class="btn btn-outline-light" name="add_timetable">Добавить</button>
                                 </div>
@@ -51,8 +63,9 @@
 
 
         {% else %}
-            <div class="card-columns">
 
+
+            <div class="card-columns">
                 <div class="card p-3">
                     <table class="table table-dark">
                         <thead>
@@ -67,12 +80,11 @@
                                         <thead></thead>
                                         {% for lesson in mon %}
                                             {% if lesson.repeat == 0 or lesson.repeat == 1 %}
-
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
-                                                        <input type="hidden" value="{{ lesson }}">
+                                                        <input type="hidden" name="lesson_id" value={{ lesson.pk }}>
                                                         <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
                                                     </form>
                                                     <th scope="col">{{ lesson.type }}</th>
@@ -95,8 +107,8 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
-                                                        <input type="hidden" value="{{ lesson }}">
+                                                    <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" name="lesson_id" value={{ lesson.pk}}>
                                                         <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
                                                     </form>
                                                     <th scope="col">{{ lesson.type }}</th>
@@ -120,8 +132,8 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
-                                                        <input type="hidden" value="{{ lesson }}">
+                                                    <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" name="lesson_id" value={{ lesson.pk}}>
                                                         <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
                                                     </form>
                                                     <th scope="col">{{ lesson.type }}</th>
@@ -144,8 +156,8 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
-                                                        <input type="hidden" value="{{ lesson }}">
+                                                    <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" name="lesson_id" value={{ lesson.pk }}>
                                                         <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
                                                     </form>
                                                     <th scope="col">{{ lesson.type }}</th>
@@ -168,8 +180,8 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
-                                                        <input type="hidden" value="{{ lesson }}">
+                                                    <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" name="lesson_id" value={{ lesson.pk }}>
                                                         <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
                                                     </form>
                                                     <th scope="col">{{ lesson.type }}</th>
@@ -192,8 +204,8 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
-                                                        <input type="hidden" value="{{ lesson }}">
+                                                    <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" name="lesson_id" value={{ lesson.pk}}>
                                                         <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
                                                     </form>
                                                     <th scope="col">{{ lesson.type }}</th>
@@ -216,8 +228,8 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
-                                                        <input type="hidden" value="{{ lesson }}">
+                                                    <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" name="lesson_id" value={{ lesson.pk}}>
                                                         <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
                                                     </form>
                                                     <th scope="col">{{ lesson.type }}</th>
@@ -251,8 +263,8 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
-                                                        <input type="hidden" value="{{ lesson }}">
+                                                    <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" name="lesson_id" value={{ lesson.pk}}>
                                                         <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
                                                     </form>
                                                     <th scope="col">{{ lesson.type }}</th>
@@ -275,8 +287,8 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
-                                                        <input type="hidden" value="{{ lesson }}">
+                                                    <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" name="lesson_id" value={{ lesson.pk}}>
                                                         <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
                                                     </form>
                                                     <th scope="col">{{ lesson.type }}</th>
@@ -300,8 +312,8 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
-                                                        <input type="hidden" value="{{ lesson }}">
+                                                    <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" name="lesson_id" value={{ lesson.pk}}>
                                                         <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
                                                     </form>
                                                     <th scope="col">{{ lesson.type }}</th>
@@ -324,8 +336,8 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
-                                                        <input type="hidden" value="{{ lesson }}">
+                                                    <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" name="lesson_id" value={{ lesson.pk}}>
                                                         <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
                                                     </form>
                                                     <th scope="col">{{ lesson.type }}</th>
@@ -348,8 +360,8 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
-                                                        <input type="hidden" value="{{ lesson }}">
+                                                    <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" name="lesson_id" value={{ lesson.pk}}>
                                                         <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
                                                     </form>
                                                     <th scope="col">{{ lesson.type }}</th>
@@ -372,8 +384,8 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
-                                                        <input type="hidden" value="{{ lesson }}">
+                                                    <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" name="lesson_id" value={{ lesson.pk}}>
                                                         <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
                                                     </form>
                                                     <th scope="col">{{ lesson.type }}</th>
@@ -396,8 +408,8 @@
                                                 <tr class="small-table">
                                                     <th scope="col">{{ lesson.start_time.hour }}:{{ lesson.start_time.minute }}-
                                                         {{ lesson.end_time.hour }}:{{ lesson.end_time.minute }}</th>
-                                                     <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
-                                                        <input type="hidden" value="{{ lesson }}">
+                                                    <form method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                                                        <input type="hidden" name="lesson_id" value={{ lesson.pk}}>
                                                         <th scope="col"><button type="submit" class="btn-link">{{ lesson.name }}</button></th>
                                                     </form>
                                                     <th scope="col">{{ lesson.type }}</th>

@@ -1,0 +1,506 @@
+{% extends 'navbar.html' %}
+
+{% block content %}
+    {% if admin %}
+        <div class="card">
+            <br>
+            <h5 class="center-text">{{ message }}</h5>
+            <div class="card-body">
+                <form class="form-horizontal" name="lesson" method="post" action="{% url 'change_lesson' %}">{% csrf_token %}
+                    <input type="hidden" name="lesson_id" value="{{ lesson.pk }}">
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Предмет</label>
+                        <div class="col-sm-10">
+                            <input required class="form-control" type="text" name="lesson" value="{{ lesson.name }}"><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Преподаватель</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="text" name="teacher" value="{{ lesson.teacher }}"><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Аудитория</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="text" name="classroom" value="{{ lesson.classroom }}"><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Начало</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" name="start_time" type="time" value={{ start_time }} required><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Конец</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" name="end_time" type="time" value={{ end_time }} required><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Тип</label>
+                        <div class="col-sm-10">
+                            <div class="form-check form-check-inline">
+                                {% if lesson.type == 'лк' %}
+                                    <input class="form-check-input" type="radio" name="type" id="lk" value="лк" checked>
+                                {% else %}
+                                    <input class="form-check-input" type="radio" name="type" id="lk" value="лк">
+                                {% endif %}
+                                <label class="form-check-label" for="inlineRadio1">Лекция</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                {% if lesson.type == 'пр' %}
+                                    <input class="form-check-input" type="radio" name="type" id="pr" value="пр" checked>
+                                {% else %}
+                                    <input class="form-check-input" type="radio" name="type" id="pr" value="пр">
+                                {% endif %}
+                                <label class="form-check-label" for="inlineRadio2">Практика</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                {% if lesson.type == 'сем' %}
+                                    <input class="form-check-input" type="radio" name="type" id="sem" value="сем" checked>
+                                {% else %}
+                                    <input class="form-check-input" type="radio" name="type" id="sem" value="сем">
+                                {% endif %}
+                                <label class="form-check-label" for="inlineRadio3">Семинар</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                {% if lesson.type == 'зач' %}
+                                    <input class="form-check-input" type="radio" name="type" id="zach" value="зач" checked>
+                                {% else %}
+                                    <input class="form-check-input" type="radio" name="type" id="zach" value="зач">
+                                {% endif %}
+                                <label class="form-check-label" for="inlineRadio2">Зачет</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                {% if lesson.type == 'лаб' %}
+                                    <input class="form-check-input" type="radio" name="type" id="lab" value="лаб" checked>
+                                {% else %}
+                                    <input class="form-check-input" type="radio" name="type" id="lab" value="лаб">
+                                {% endif %}
+                                <label class="form-check-label" for="inlineRadio2">Лабораторная работа</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                {% if lesson.type == 'конс' %}
+                                    <input class="form-check-input" type="radio" name="type" id="kons" value="конс" checked>
+                                {% else %}
+                                    <input class="form-check-input" type="radio" name="type" id="kons" value="конс">
+                                {% endif %}
+                                <label class="form-check-label" for="inlineRadio2">Консультация</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                {% if lesson.type == 'экз' %}
+                                    <input class="form-check-input" type="radio" name="type" id="ekz" value="экз" checked>
+                                {% else %}
+                                    <input class="form-check-input" type="radio" name="type" id="ekz" value="экз">
+                                {% endif %}
+                                <label class="form-check-label" for="inlineRadio2">Экзамен</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                {% if lesson.type == 'ср' %}
+                                    <input class="form-check-input" type="radio" name="type" id="sr" value="ср" checked>
+                                {% else %}
+                                    <input class="form-check-input" type="radio" name="type" id="sr" value="ср">
+                                {% endif %}
+                                <label class="form-check-label" for="inlineRadio1">Самостоятельная работа</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                {% if lesson.type == 'фильм' %}
+                                    <input class="form-check-input" type="radio" name="type" id="film" value="фильм" checked>
+                                {% else %}
+                                    <input class="form-check-input" type="radio" name="type" id="film" value="фильм">
+                                {% endif %}
+                                <label class="form-check-label" for="inlineRadio1">Фильм</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                {% if lesson.type == '' %}
+                                    <input class="form-check-input" type="radio" name="type" id="none" value="" checked>
+                                {% else %}
+                                    <input class="form-check-input" type="radio" name="type" id="none" value="">
+                                {% endif %}
+                                <label class="form-check-label" for="inlineRadio1">Не указан</label>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+                                <label class="form-check-label" for="exampleRadios1">
+                                    Переодически
+                                </label>
+                            </div>
+                        </label>
+                        <div class="col-sm-10">
+                            <div class="card-body">
+                                <div class="form-check form-check-inline">
+                                    {% if lesson.day_of_week == 0 %}
+                                        <input class="form-check-input" type="radio" name="day_of_week" id="monday" value="0" checked>
+                                    {% else %}
+                                        <input class="form-check-input" type="radio" name="day_of_week" id="monday" value="0">
+                                    {% endif %}
+                                    <label class="form-check-label" for="inlineRadio1">Пн</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    {% if lesson.day_of_week == 1 %}
+                                        <input class="form-check-input" type="radio" name="day_of_week" id="tuesday" value="1" checked>
+                                    {% else %}
+                                        <input class="form-check-input" type="radio" name="day_of_week" id="tuesday" value="1">
+                                    {% endif %}
+                                    <label class="form-check-label" for="inlineRadio2">Вт</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    {% if lesson.day_of_week == 2 %}
+                                        <input class="form-check-input" type="radio" name="day_of_week" id="wednesday" value="2" checked>
+                                    {% else %}
+                                        <input class="form-check-input" type="radio" name="day_of_week" id="wednesday" value="2">
+                                    {% endif %}
+                                    <label class="form-check-label" for="inlineRadio3">Ср</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    {% if lesson.day_of_week == 3 %}
+                                        <input class="form-check-input" type="radio" name="day_of_week" id="thursday" value="3" checked>
+                                    {% else %}
+                                        <input class="form-check-input" type="radio" name="day_of_week" id="thursday" value="3">
+                                    {% endif %}
+                                    <label class="form-check-label" for="inlineRadio2">Чт</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    {% if lesson.day_of_week == 4 %}
+                                        <input class="form-check-input" type="radio" name="day_of_week" id="friday" value="4" checked>
+                                    {% else %}
+                                        <input class="form-check-input" type="radio" name="day_of_week" id="friday" value="4">
+                                    {% endif %}
+                                    <label class="form-check-label" for="inlineRadio2">Пт</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    {% if lesson.day_of_week == 5 %}
+                                        <input class="form-check-input" type="radio" name="day_of_week" id="saturday" value="5" checked>
+                                    {% else %}
+                                        <input class="form-check-input" type="radio" name="day_of_week" id="saturday" value="5">
+                                    {% endif %}
+                                    <label class="form-check-label" for="inlineRadio2">Сб</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    {% if lesson.day_of_week == 6 %}
+                                        <input class="form-check-input" type="radio" name="day_of_week" id="sunday" value="6" checked>
+                                    {% else %}
+                                        <input class="form-check-input" type="radio" name="day_of_week" id="sunday" value="6">
+                                    {% endif %}
+                                    <label class="form-check-label" for="inlineRadio2">Вс</label>
+                                </div>
+                                <br>
+
+                                <div class="form-check">
+                                    {% if lesson.repeat == 0 %}
+                                        <input class="form-check-input" type="radio" name="repeat" id="each_week" value="0" checked>
+                                    {% else %}
+                                        <input class="form-check-input" type="radio" name="repeat" id="each_week" value="0">
+                                    {% endif %}
+                                    <label class="form-check-label" for="exampleRadios1">
+                                        Каждую неделю
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    {% if lesson.repeat == 1 %}
+                                        <input class="form-check-input" type="radio" name="repeat" id="uneven_week" value="1" checked>
+                                    {% else %}
+                                        <input class="form-check-input" type="radio" name="repeat" id="uneven_week" value="1">
+                                    {% endif %}
+                                    <label class="form-check-label" for="exampleRadios3">
+                                        По нечетным
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    {% if lesson.repeat == 2 %}
+                                        <input class="form-check-input" type="radio" name="repeat" id="even_week" value="2" checked>
+                                    {% else %}
+                                        <input class="form-check-input" type="radio" name="repeat" id="even_week" value="2">
+                                    {% endif %}
+                                    <label class="form-check-label" for="exampleRadios2">
+                                        По четными
+                                    </label>
+                                </div>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                    <div align="right">
+                        <button type="submit" name="change_lesson" class="btn btn-outline-light">Изменить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    {% else %}
+
+        <div class="card">
+            <br>
+            <h5 class="center-text">{{ message }}</h5>
+            <div class="card-body">
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Предмет</label>
+                    <div class="col-sm-10">
+                        <input required class="form-control" type="text" name="lesson" value="{{ lesson.name }}" disabled><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Преподаватель</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" type="text" name="teacher" value="{{ lesson.teacher }}" disabled><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Аудитория</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" type="text" name="classroom" value="{{ lesson.classroom }}" disabled><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Начало</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" name="start_time" type="time" value="{{ start_time }}" disabled required><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Конец</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" name="end_time" type="time" value="{{ end_time }}" disabled required><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Тип</label>
+                    <div class="col-sm-10">
+                        <div class="form-check form-check-inline">
+                            {% if lesson.type == 'лк' %}
+                                <input class="form-check-input" type="radio" name="type" id="lk" value="лк" checked disabled>
+                            {% else %}
+                                <input class="form-check-input" type="radio" name="type" id="lk" value="лк" disabled>
+                            {% endif %}
+                            <label class="form-check-label" for="inlineRadio1">Лекция</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            {% if lesson.type == 'пр' %}
+                                <input class="form-check-input" type="radio" name="type" id="pr" value="пр" checked disabled>
+                            {% else %}
+                                <input class="form-check-input" type="radio" name="type" id="pr" value="пр" disabled>
+                            {% endif %}
+                            <label class="form-check-label" for="inlineRadio2">Практика</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            {% if lesson.type == 'сем' %}
+                                <input class="form-check-input" type="radio" name="type" id="sem" value="сем" checked disabled>
+                            {% else %}
+                                <input class="form-check-input" type="radio" name="type" id="sem" value="сем" disabled>
+                            {% endif %}
+                            <label class="form-check-label" for="inlineRadio3">Семинар</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            {% if lesson.type == 'зач' %}
+                                <input class="form-check-input" type="radio" name="type" id="zach" value="зач" checked disabled>
+                            {% else %}
+                                <input class="form-check-input" type="radio" name="type" id="zach" value="зач" disabled>
+                            {% endif %}
+                            <label class="form-check-label" for="inlineRadio2">Зачет</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            {% if lesson.type == 'лаб' %}
+                                <input class="form-check-input" type="radio" name="type" id="lab" value="лаб" checked disabled>
+                            {% else %}
+                                <input class="form-check-input" type="radio" name="type" id="lab" value="лаб" disabled>
+                            {% endif %}
+                            <label class="form-check-label" for="inlineRadio2">Лабораторная работа</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            {% if lesson.type == 'конс' %}
+                                <input class="form-check-input" type="radio" name="type" id="kons" value="конс" checked disabled>
+                            {% else %}
+                                <input class="form-check-input" type="radio" name="type" id="kons" value="конс" disabled>
+                            {% endif %}
+                            <label class="form-check-label" for="inlineRadio2">Консультация</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            {% if lesson.type == 'экз' %}
+                                <input class="form-check-input" type="radio" name="type" id="ekz" value="экз" checked disabled>
+                            {% else %}
+                                <input class="form-check-input" type="radio" name="type" id="ekz" value="экз" disabled>
+                            {% endif %}
+                            <label class="form-check-label" for="inlineRadio2">Экзамен</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            {% if lesson.type == 'ср' %}
+                                <input class="form-check-input" type="radio" name="type" id="sr" value="ср" checked disabled>
+                            {% else %}
+                                <input class="form-check-input" type="radio" name="type" id="sr" value="ср" disabled>
+                            {% endif %}
+                            <label class="form-check-label" for="inlineRadio1">Самостоятельная работа</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            {% if lesson.type == 'фильм' %}
+                                <input class="form-check-input" type="radio" name="type" id="film" value="фильм" checked disabled>
+                            {% else %}
+                                <input class="form-check-input" type="radio" name="type" id="film" value="фильм" disabled>
+                            {% endif %}
+                            <label class="form-check-label" for="inlineRadio1">Фильм</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            {% if lesson.type == '' %}
+                                <input class="form-check-input" type="radio" name="type" id="none" value="" checked disabled>
+                            {% else %}
+                                <input class="form-check-input" type="radio" name="type" id="none" value="" disabled>
+                            {% endif %}
+                            <label class="form-check-label" for="inlineRadio1">Не указан</label>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+
+
+        <div class="row">
+            <label class="col-sm-2 col-form-label">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked disabled>
+                    <label class="form-check-label" for="exampleRadios1">
+                        Переодически
+                    </label>
+                </div>
+            </label>
+            <div class="col-sm-10">
+                <div class="card-body">
+                    <div class="form-check form-check-inline">
+                        {% if lesson.day_of_week == 0 %}
+                            <input class="form-check-input" type="radio" name="day_of_week" id="monday" value="0" checked disabled>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="day_of_week" id="monday" value="0" disabled>
+                        {% endif %}
+                        <label class="form-check-label" for="inlineRadio1">Пн</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        {% if lesson.day_of_week == 1 %}
+                            <input class="form-check-input" type="radio" name="day_of_week" id="tuesday" value="1" checked disabled>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="day_of_week" id="tuesday" value="1" disabled>
+                        {% endif %}
+                        <label class="form-check-label" for="inlineRadio2">Вт</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        {% if lesson.day_of_week == 2 %}
+                            <input class="form-check-input" type="radio" name="day_of_week" id="wednesday" value="2" checked disabled>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="day_of_week" id="wednesday" value="2" disabled>
+                        {% endif %}
+                        <label class="form-check-label" for="inlineRadio3">Ср</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        {% if lesson.day_of_week == 3 %}
+                            <input class="form-check-input" type="radio" name="day_of_week" id="thursday" value="3" checked disabled>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="day_of_week" id="thursday" value="3" disabled>
+                        {% endif %}
+                        <label class="form-check-label" for="inlineRadio2">Чт</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        {% if lesson.day_of_week == 4 %}
+                            <input class="form-check-input" type="radio" name="day_of_week" id="friday" value="4" checked disabled>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="day_of_week" id="friday" value="4" disabled>
+                        {% endif %}
+                        <label class="form-check-label" for="inlineRadio2">Пт</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        {% if lesson.day_of_week == 5 %}
+                            <input class="form-check-input" type="radio" name="day_of_week" id="saturday" value="5" checked disabled>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="day_of_week" id="saturday" value="5" disabled>
+                        {% endif %}
+                        <label class="form-check-label" for="inlineRadio2">Сб</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        {% if lesson.day_of_week == 6 %}
+                            <input class="form-check-input" type="radio" name="day_of_week" id="sunday" value="6" checked disabled>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="day_of_week" id="sunday" value="6" disabled>
+                        {% endif %}
+                        <label class="form-check-label" for="inlineRadio2">Вс</label>
+                    </div>
+                    <br>
+
+                    <div class="form-check">
+                        {% if lesson.repeat == 0 %}
+                            <input class="form-check-input" type="radio" name="repeat" id="each_week" value="0" checked disabled>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="repeat" id="each_week" value="0" disabled>
+                        {% endif %}
+                        <label class="form-check-label" for="exampleRadios1">
+                            Каждую неделю
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        {% if lesson.repeat == 1 %}
+                            <input class="form-check-input" type="radio" name="repeat" id="uneven_week" value="1" checked disabled>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="repeat" id="uneven_week" value="1" disabled>
+                        {% endif %}
+                        <label class="form-check-label" for="exampleRadios3">
+                            По нечетным
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        {% if lesson.repeat == 2 %}
+                            <input class="form-check-input" type="radio" name="repeat" id="even_week" value="2" checked disabled>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="repeat" id="even_week" value="2" disabled>
+                        {% endif %}
+                        <label class="form-check-label" for="exampleRadios2">
+                            По четными
+                        </label>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+    {#                <div class="row">#}
+    {#                    <label class="col-sm-2 col-form-label">#}
+    {#                        <div class="form-check">#}
+    {#                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">#}
+    {#                            <label class="form-check-label" for="exampleRadios2">#}
+    {#                                Произвольные даты#}
+    {#                            </label>#}
+    {#                        </div>#}
+    {#                    </label>#}
+    {#                    <div class="col-sm-10">#}
+    {#                        <div class="card-body">#}
+    {##}
+    {#                            <br>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                </div>#}
+
+    <br><br>
+{% endblock %}

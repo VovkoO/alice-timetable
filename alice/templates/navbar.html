@@ -14,11 +14,15 @@
     <style>
         .navbar {background-color: #1a1e34 !important;}
 
+        html, body {
+            height: 100%;
+        }
+
         body {
-            background-image: url("https://images.pexels.com/photos/1308624/pexels-photo-1308624.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
-        {#background-color: #1e1e2f;#}
-        {#background: linear-gradient(to bottom, #0D0E26, #090A1B);#}
-            {#background: linear-gradient(to bottom, #a22dee, #5e52d1);#}
+        {#background-image: linear-gradient(to bottom, #360033 0%, #330867 100%);#}
+        {#background-color: #23222f;#}
+            background: linear-gradient(to bottom, #525252, #3d72b4);
+        {#background: linear-gradient(to bottom, #a22dee, #5e52d1);#}
             color: white;
         }
 
@@ -91,6 +95,10 @@
             text-align: left;
         }
 
+        .error {
+            font-size: 12px;
+        }
+
 
     </style>
 
@@ -107,17 +115,26 @@
                 <a class="nav-link" href="{% url 'timetable' %}">Расписание <span class="sr-only">(current)</span></a>
             </li>
         </ul>
-        <span class="navbar-text">
-            {% if user.is_authenticated %}
+
+        {% if user.is_authenticated %}
+            <span class="navbar-text">
                 <form action="{% url 'logout' %}">
                     <button type="submit" class="btn btn-outline-light">Выйти</button>
                 </form>
-            {% else %}
+                </span>
+        {% else %}
+            <span class="navbar-text">
                 <form action="{% url 'login' %}">
                     <button type="submit" class="btn btn-outline-light">Войти</button>
                 </form>
-            {% endif %}
-    </span>
+                </span>
+            <span class="navbar-text">
+                <form action="{% url 'register' %}">
+                    <button type="submit" class="btn btn-outline-light">Регистрация</button>
+                </form>
+                </span>
+        {% endif %}
+
     </div>
 </nav>
 

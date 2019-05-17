@@ -63,36 +63,6 @@ def timetable(request):
                     user.delete()
                     return redirect('timetable')
 
-
-                ##Если посльзователь выбирает расписание
-                if 'choose_timetable' in request.POST:
-                    univercity_input = request.POST.get('unibercity')
-                    try:
-                        univercity = Univercity.objects.get(name=univercity_input)
-                    except Univercity.DoesNotExist:
-                        try:
-                            readable_univercity_input = univercity_input.lower().replace(' ', '').replace('-', '')
-                            univercity = Univercity.objects.get(readable_name=readable_univercity_input)
-                        except Univercity.DoesNotExist:
-                            return render(request, 'timetable.html', {'does_not_exist': 'Для такого ВУЗа нет расписания',
-                                                                      'user': auth.get_user(request)})
-                    try:
-                        group_input = request.POST.get('group')
-                        group = Group.objects.get(univerсity_id=univercity, name=group_input)
-                        SiteUsers.objects.create(user_id=auth.get_user(request), univerсity_id=univercity,
-                                                 group_id=group)
-                        return redirect('timetable')
-                    except Group.DoesNotExist:
-                        readable_group_input = group_input.lower().replace(' ', '').replace('-', '')
-                        try:
-                            group = Group.objects.get(univerсity_id=univercity, readable_name=readable_group_input)
-                            SiteUsers.objects.create(user_id=auth.get_user(request), univerсity_id=univercity,
-                                                     group_id=group)
-                            return redirect('timetable')
-                        except Group.DoesNotExist:
-                            return render(request, 'timetable.html', {'does_not_exist': 'Для такой группы нет расписания',
-                                                                      'user': auth.get_user(request)})
-
                 ##Добавление нового админа
                 if 'add_admin' in request.POST:
                     email = request.POST.get('email')
@@ -171,7 +141,15 @@ def timetable(request):
                             return render(request, 'timetable.html', {'does_not_exist': 'Для такой группы нет расписания',
                                                                       'user': auth.get_user(request),
                                                                       'site_user_does_not_exist': '-'})
-
+                ##Если пользователь добавляет новое расписание
+                elif 'add_timetable' in request.POST:
+                    univercity = request.POST.get('univercity')
+                    group = request.POST.get('group')
+                    start_date = request.POST.get('start_date')
+                    end_date = request.POST.get('end_date')
+                    user = auth.get_user(request)
+                    message = site_backend.add_timetable(univercity, group, start_date, end_date, user)
+                    return render(request, 'timetable.html', {'user': user, 'message': message})
             return render(request, 'timetable.html', {'user': auth.get_user(request),
                                                       'site_user_does_not_exist': 'У вас нет расписания, создайте его, либо, попросите '
                                                                                   'доступ к нему у другого человека, который его создал'})
@@ -180,7 +158,43 @@ def timetable(request):
 
 def change_lesson(request):
     if request.method == 'POST':
-        lesson = request.POST.get('lesson')
+        message = ''
+        print(request.POST.get('lesson_id'))
+        lesson = Lesson.objects.get(pk=request.POST.get('lesson_id'))
+        if 'change_lesson' in request.POST:
+            name = request.POST.get('lesson')
+            teacher = request.POST.get('teacher')
+            classroom = request.POST.get('classroom')
+            start_time = request.POST.get('start_time')
+            end_time = request.POST.get('end_time')
+            type = request.POST.get('type')
+            day_of_week = int(request.POST.get('day_of_week'))
+            repeat = int(request.POST.get('repeat'))
+            user = SiteUsers.objects.get(user_id=auth.get_user(request))
+            start_date = user.group_id.start_date
+            end_date = user.group_id.end_date
+            message = site_backend.change_lesson(lesson, name, teacher, classroom, start_time, end_time, type,
+                                                 day_of_week, repeat, start_date, end_date)
+        lesson = Lesson.objects.get(pk=request.POST.get('lesson_id'))
+        start_time = str(lesson.start_time)
+        end_time = str(lesson.end_time)
+        user = auth.get_user(request)
+        group = SiteUsers.objects.get(user_id=user).group_id
+        try:
+            Admin.objects.get(user_id=user, group_id=group)
+            admin = True
+        except Admin.DoesNotExist:
+            admin = False
+            message = 'Для того, что бы делать изменения, попросите разрешение у админа'
+        response = {
+            'admin': admin,
+            'lesson': lesson,
+            'start_time': start_time[0:len(start_time)-3],
+            'end_time': end_time[0:len(end_time)-3],
+            'user': auth.get_user(request),
+            'message': message
+        }
+    return render(request, 'change_lesson.html', response)
 
 
 def add_timetable(request):
@@ -235,6 +249,23 @@ def login(request):
         else:
             return render(request, 'login.html', {'error': 'Нерпавильный email или пароль', 'user': auth.get_user(request)})
     return render(request, 'login.html', {'user': auth.get_user(request)})
+
+
+def register(request):
+    if request.method == 'POST':
+        input_username = request.POST.get('email')
+        input_password = request.POST.get('password')
+        try:
+            User.objects.get(username=input_username)
+            return render(request, 'register.html', {'error': 'Пользователь с таким email уже существует', 'user': auth.get_user(request)})
+        except User.DoesNotExist:
+            user = User.objects.create(username=input_username, password=input_password)
+            user.set_password(input_password)
+            user.save()
+            user = auth.authenticate(username=input_username, password=input_password)
+            auth.login(request, user)
+            return redirect('timetable')
+    return render(request, 'register.html', {'user': auth.get_user(request)})
 
 
 def logout(request):
