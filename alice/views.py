@@ -11,12 +11,11 @@ from . import site_backend, alice_backend
 def get_request(request):
     if request.method == 'POST':
         request_json = json.loads(request.body.decode('utf-8'))
-        answer = alice_backend.get_answer(request_json)
-        answer = str(answer)
+        text, text_to_speech = alice_backend.get_answer(request_json)
         response = {
             "response": {
-                "text": answer,
-                "tts": answer,
+                "text": text,
+                "tts": text_to_speech,
                 "end_session": False
             },
             "session": {
@@ -31,7 +30,7 @@ def get_request(request):
 
 
 def home_page(request):
-    return HttpResponse('Hello')
+    return redirect('timetable')
 
 
 def timetable(request):
@@ -148,8 +147,14 @@ def timetable(request):
                     start_date = request.POST.get('start_date')
                     end_date = request.POST.get('end_date')
                     user = auth.get_user(request)
-                    message = site_backend.add_timetable(univercity, group, start_date, end_date, user)
-                    return render(request, 'timetable.html', {'user': user, 'message': message})
+                    success = site_backend.add_timetable(univercity, group, start_date, end_date, user)
+                    if success:
+                        return redirect('timetable')
+                    else:
+                        return render(request, 'timetable.html', {'site_user_does_not_exist': '-',
+                                                                  'add_message': 'Для такой группы уже есть расписание',
+                                                                  'user': auth.get_user(request)})
+
             return render(request, 'timetable.html', {'user': auth.get_user(request),
                                                       'site_user_does_not_exist': 'У вас нет расписания, создайте его, либо, попросите '
                                                                                   'доступ к нему у другого человека, который его создал'})

@@ -99,7 +99,7 @@ def add_timetable(univercity_name, group_name, start_date, end_date, user):
     if univercity:
         group = get_group(univercity, group_name)
         if group:
-            return 'Для такой группы уже есть расписание.'
+            return False
         else:
             group = create_group(group_name, univercity, start_date, end_date)
             site_user = get_site_user(user)
@@ -114,6 +114,7 @@ def add_timetable(univercity_name, group_name, start_date, end_date, user):
                 SiteUsers.objects.create(user_id=user, group_id=group, univerсity_id=univercity, admin=True)
                 Admin.objects.create(user_id=user, group_id=group)
     else:
+        univercity = create_univercity(univercity_name)
         group = create_group(group_name, univercity, start_date, end_date)
         site_user = get_site_user(user)
         if site_user:
@@ -126,7 +127,8 @@ def add_timetable(univercity_name, group_name, start_date, end_date, user):
         else:
             SiteUsers.objects.create(user_id=user, group_id=group, univerсity_id=univercity, admin=True)
             Admin.objects.create(user_id=user, group_id=group)
-    return 'Расписание добавлено'
+    return True
+
 
 def create_univercity(univercity_name):
     readable_univercity_name = univercity_name.replace(' ', '').replace('-', '').lower()
@@ -136,7 +138,8 @@ def create_univercity(univercity_name):
 
 def create_group(group_name, univercity, start_date, end_date):
     readable_group_name = group_name.replace(' ', '').replace('-', '').lower()
-    group = Group.objects.create(name=group_name, readable_name=readable_group_name, start_date=start_date, end_date=end_date)
+    group = Group.objects.create(name=group_name, readable_name=readable_group_name, start_date=start_date,
+                                 end_date=end_date, univerсity_id=univercity)
     return group
 
 
