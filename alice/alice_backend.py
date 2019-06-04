@@ -254,11 +254,11 @@ def get_answer_number_of_lessons(date, lessons):
     day_of_week = get_weekday(date)
     month = get_month(date)
     day = get_number_of_day(date)
-    lessons_number = get_number_of_lessons(lessons)
     number_of_lessons = len(lessons)
     if number_of_lessons == 0:
         answer = day_of_week + day + month + 'у вас нет занятий. Можете отдохнуть.'
     else:
+        lessons_number = get_number_of_lessons(lessons)
         answer = day_of_week + day + month + 'у вас ' + lessons_number
     return answer
 
