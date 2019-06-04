@@ -12,6 +12,8 @@ def get_answer(json_request):
         if json_request['session']['message_id'] == 0:
             text = 'Здравствуйте, для начала выберете учебное заведение. Просто скажите его название.'
             return text, text
+
+        ##ВВод университета
         unicerciry_input = json_request['request']['command']
         try:
             univercity = Univercity.objects.get(name=unicerciry_input)
@@ -20,36 +22,64 @@ def get_answer(json_request):
             try:
                 univercity = Univercity.objects.get(readable_name=unicerciry_input)
             except Univercity.DoesNotExist:
-                text = 'Не получилось найти подходящего расписания. Попробуйте произнести еще раз название заведения,' \
-                       ' либо добавьте своё расписание на сайте.'
-                return text, text
+                univer_number = 0
+                for token in json_request['request']['nlu']['entities']:
+                    if 'type' in token and token['type'] == 'YANDEX.NUMBER':
+                        univer_number = token['value']
+                        break
+                if univer_number:
+                    try:
+                        univercity = Univercity.objects.get(pk=univer_number)
+                    except Univercity.DoesNotExist:
+                        text = 'Не получилось найти подходящего расписания. Попробуйте произнести еще раз название заведения,' \
+                               ' либо добавьте своё расписание на сайте alicetime.ru.'
+                        return text, text
+                else:
+                    text = 'Не получилось найти подходящего расписания. Попробуйте произнести еще раз название заведения,' \
+                           ' либо добавьте своё расписание на сайте alicetime.ru.'
+                    return text, text
         AliceUsers.objects.create(user_id=user_id, univerсity_id=univercity)
         ##Пользователь ввел университет, теперь вводит группу
         text = 'Вам осталось указать группу. Произнесите её название.'
         return text, text
+
     ##Ввод группы
     user_group = alice_user.group_id
     if not user_group:
-        print(alice_user.group_id)
         if json_request['session']['message_id'] == 0:
             text = 'Здравствуйте, для начала вам нужно выбрать группу, в которой учитесь. Просто скажите её название.'
             return text, text
         group_input = json_request['request']['command']
+        groups = Group.objects.filter(univerсity_id=alice_user.univerсity_id)
         try:
-            group = Group.objects.get(name=group_input)
+            group = groups.get(name=group_input)
         except Group.DoesNotExist:
             group_input = group_input.replace(' ', '').replace('-', '').lower()
             try:
-                group = Group.objects.get(readable_name=group_input)
+                group = groups.get(readable_name=group_input)
             except Group.DoesNotExist:
-                text = 'Не получилось найти подходящего расписания. Попробуйте произнести еще раз название группы,' \
-                       ' либо добавьте своё расписание на сайте.'
-                return text, text
+                group_number = 0
+                for token in json_request['request']['nlu']['entities']:
+                    if 'type' in token and token['type'] == 'YANDEX.NUMBER':
+                        group_number = token['value']
+                        break
+                if group_number:
+                    try:
+                        group = groups.get(pk=group_number)
+                    except Group.DoesNotExist:
+                        text = 'Не получилось найти подходящего расписания. Попробуйте произнести еще раз название группы,' \
+                               ' либо добавьте своё расписание на сайте alicetime.ru.'
+                        return text, text
+                else:
+                    text = 'Не получилось найти подходящего расписания. Попробуйте произнести еще раз название группы,' \
+                           ' либо добавьте своё расписание на сайте alicetime.ru.'
+                    return text, text
         alice_user.group_id = group
         alice_user.save()
         text = 'Вы выбрали свое расписание, теперь вы можете узнать у меня расписание на какой-либо день, ' \
                'просто скажите число, на которе вы хотите его узнать.'
         return text, text
+
 
     ##Помощь
     if 'помощь' in json_request['request']['command'] or 'Помощь' in json_request['request']['command']:
@@ -82,7 +112,6 @@ def get_answer(json_request):
 
 
 def get_date(json_request):
-    timezone = json_request['meta']['timezone']
     today = datetime.now()
     date_dict = None
     for token in json_request['request']['nlu']['entities']:

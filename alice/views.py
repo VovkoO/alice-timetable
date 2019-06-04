@@ -7,6 +7,11 @@ import json
 from . import site_backend, alice_backend
 
 
+def main_page(request):
+    groups = Group.objects.all()
+    return render(request, 'main.html', {'user': auth.get_user(request), 'groups': groups})
+
+
 @csrf_exempt
 def get_request(request):
     if request.method == 'POST':
