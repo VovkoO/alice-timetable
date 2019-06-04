@@ -11,7 +11,7 @@ def get_answer(json_request):
     except AliceUsers.DoesNotExist:
         if json_request['session']['message_id'] == 0:
             text = 'Здравствуйте, для начала выберете учебное заведение. Просто скажите его название, либо уникальный' \
-                   'номер, который можете найти на сатйе alicetime.ru'
+                   ' номер, который можете найти на сайте alicetime.ru'
             return text, text
 
         ##ВВод университета
