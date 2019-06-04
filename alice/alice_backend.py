@@ -10,7 +10,8 @@ def get_answer(json_request):
     #если у пользователя не указаны данные об университете и группе, то добавляем их
     except AliceUsers.DoesNotExist:
         if json_request['session']['message_id'] == 0:
-            text = 'Здравствуйте, для начала выберете учебное заведение. Просто скажите его название.'
+            text = 'Здравствуйте, для начала выберете учебное заведение. Просто скажите его название, либо уникальный' \
+                   'номер, который можете найти на сатйе alicetime.ru'
             return text, text
 
         ##ВВод университета
@@ -31,12 +32,12 @@ def get_answer(json_request):
                     try:
                         univercity = Univercity.objects.get(pk=univer_number)
                     except Univercity.DoesNotExist:
-                        text = 'Не получилось найти подходящего расписания. Попробуйте произнести еще раз название заведения,' \
-                               ' либо добавьте своё расписание на сайте alicetime.ru.'
+                        text = 'Не получилось найти подходящего расписания. Попробуйте произнести еще раз название, или номер' \
+                               ' заведения, указанный на сайте alicetime.ru, либо добавьте своё расписание на сайте alicetime.ru.'
                         return text, text
                 else:
-                    text = 'Не получилось найти подходящего расписания. Попробуйте произнести еще раз название заведения,' \
-                           ' либо добавьте своё расписание на сайте alicetime.ru.'
+                    text = 'Не получилось найти подходящего расписания. Попробуйте произнести еще раз название, или номер' \
+                           ' заведения, указанный на сайте alicetime.ru, либо добавьте своё расписание на сайте alicetime.ru.'
                     return text, text
         AliceUsers.objects.create(user_id=user_id, univerсity_id=univercity)
         ##Пользователь ввел университет, теперь вводит группу
@@ -47,7 +48,8 @@ def get_answer(json_request):
     user_group = alice_user.group_id
     if not user_group:
         if json_request['session']['message_id'] == 0:
-            text = 'Здравствуйте, для начала вам нужно выбрать группу, в которой учитесь. Просто скажите её название.'
+            text = 'Здравствуйте, для начала вам нужно выбрать группу, в которой учитесь. Просто скажите её название, ' \
+                   'либо уникальный номер, указаный на сайте alicetime.ru.'
             return text, text
         group_input = json_request['request']['command']
         groups = Group.objects.filter(univerсity_id=alice_user.univerсity_id)
@@ -93,6 +95,17 @@ def get_answer(json_request):
         alice_user.delete()
         text = 'Теперь выберете учебное заведение. Просто произнесите его название.'
         return text, text
+
+    ##Сколько занятий
+    if 'сколько' in json_request['request']['command'] or 'Сколько' in json_request['request']['command']:
+        date = get_date(json_request)
+        if date is None:
+            text = 'Извините, я не поняла, на какое число вы бы хотели узнать расписание?'
+            return text, text
+        else:
+            lessons = get_lessons(date, user_group)
+            text = get_answer_number_of_lessons(date, lessons)
+            return text, text
 
     ##Получение расписания
     if json_request['session']['message_id'] == 0:
@@ -195,7 +208,7 @@ def get_lessons(date, group):
         try:
             dates.append(Dates.objects.get(date=date, lesson_id=lesson))
         except Dates.DoesNotExist:
-             lessons_copy = lessons_copy.exclude(pk=lesson.pk)
+            lessons_copy = lessons_copy.exclude(pk=lesson.pk)
     lessons_copy = lessons_copy.order_by('start_time', 'end_time')
     return lessons_copy
 
@@ -204,7 +217,61 @@ def get_nice_answer(date, lessons):
     text = ''
     text_to_speech = ''
 
-    ##Обработка дня недели
+    day_of_week = get_weekday(date)
+    month = get_month(date)
+    day = get_number_of_day(date)
+    lessons_number = get_number_of_lessons(lessons)
+    number_of_lessons = len(lessons)
+
+    ##обработка text_to_speech
+    if number_of_lessons == 0:
+        text_to_speech = day_of_week + day + month + 'у вас нет занятий. Можете отдохнуть.'
+    else:
+        text_to_speech = day_of_week + day + month + 'у вас ' + lessons_number
+        if number_of_lessons == 1:
+            text_to_speech += lessons[0].name + ' в ' + str(lessons[0].start_time)
+        else:
+            variants = ['потом ', 'затем ', 'после ', 'далее ']
+            text_to_speech += 'Сначала ' + lessons[0].name + ' в ' + get_time(lessons[0].start_time) + ', '
+            for i in range(1, number_of_lessons):
+                text_to_speech += random.choice(variants)
+                if i == number_of_lessons - 1:
+                    text_to_speech += lessons[i].name + ' в ' + get_time(lessons[i].start_time) + '.'
+                else:
+                    text_to_speech += lessons[i].name + ' в ' + get_time(lessons[i].start_time) + ', '
+
+    #обработка text
+    if number_of_lessons == 0:
+        text = text_to_speech
+    else:
+        for lesson in lessons:
+            text += get_time(lesson.start_time) + '-' + get_time(lesson.end_time) + ' -- ' + lesson.name + ' -- ' + \
+                    lesson.type + ' -- ' + lesson.teacher + '\n'
+    return text, text_to_speech
+
+
+def get_answer_number_of_lessons(date, lessons):
+    day_of_week = get_weekday(date)
+    month = get_month(date)
+    day = get_number_of_day(date)
+    lessons_number = get_number_of_lessons(lessons)
+    number_of_lessons = len(lessons)
+    if number_of_lessons == 0:
+        answer = day_of_week + day + month + 'у вас нет занятий. Можете отдохнуть.'
+    else:
+        answer = day_of_week + day + month + 'у вас ' + lessons_number
+    return answer
+
+
+def get_time(date):
+    hours = str(date.hour)
+    minute = str(date.minute)
+    if len(minute) < 2:
+        minute = '0' + minute
+    return hours + ':' + minute
+
+
+def get_weekday(date):
     weekday = date.weekday()
     if weekday == 0:
         day_of_week = 'В понедельник '
@@ -222,9 +289,10 @@ def get_nice_answer(date, lessons):
         day_of_week = 'В воскресенье '
     else:
         day_of_week = ''
+    return  day_of_week
 
 
-    ##Обработка месяца
+def get_month(date):
     month_number = date.month
     if month_number == 1:
         month = 'января '
@@ -252,9 +320,10 @@ def get_nice_answer(date, lessons):
         month = 'декабря '
     else:
         month = ''
+    return month
 
 
-    ##Обработка числа
+def get_number_of_day(date):
     day_number = date.day
     if day_number == 1:
         day = 'первого '
@@ -320,9 +389,10 @@ def get_nice_answer(date, lessons):
         day = 'тридцать первого '
     else:
         day = ''
+    return day
 
 
-    ## Обработка количества занятий
+def get_number_of_lessons(lessons):
     number_of_lessons = len(lessons)
     if number_of_lessons == 1:
         lessons_number = 'одно занятие: '
@@ -344,39 +414,4 @@ def get_nice_answer(date, lessons):
         lessons_number = 'девять занятий. '
     elif number_of_lessons == 10:
         lessons_number = 'десять занятий. '
-
-
-    ##обработка text_to_speech
-    if number_of_lessons == 0:
-        text_to_speech = day_of_week + day + month + 'у вас нет занятий. Можете отдохнуть.'
-    else:
-        text_to_speech = day_of_week + day + month + 'у вас ' + lessons_number
-        if number_of_lessons == 1:
-            text_to_speech += lessons[0].name + ' в ' + str(lessons[0].start_time)
-        else:
-            variants = ['потом ', 'затем ', 'после ', 'далее ']
-            text_to_speech += 'Сначала ' + lessons[0].name + ' в ' + get_time(lessons[0].start_time) + ', '
-            for i in range(1, number_of_lessons):
-                text_to_speech += random.choice(variants)
-                if i == number_of_lessons - 1:
-                    text_to_speech += lessons[i].name + ' в ' + get_time(lessons[i].start_time) + '.'
-                else:
-                    text_to_speech += lessons[i].name + ' в ' + get_time(lessons[i].start_time) + ', '
-
-    #обработка text
-    if number_of_lessons == 0:
-        text = text_to_speech
-    else:
-        for lesson in lessons:
-            text += get_time(lesson.start_time) + '-' + get_time(lesson.end_time) + ' -- ' + lesson.name + ' -- ' + \
-                   lesson.type + ' -- ' + lesson.teacher + '\n'
-    return text, text_to_speech
-
-
-
-def get_time(date):
-    hours = str(date.hour)
-    minute = str(date.minute)
-    if len(minute) < 2:
-        minute = '0' + minute
-    return hours + ':' + minute
+    return lessons_number
